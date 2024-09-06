@@ -1,5 +1,5 @@
 
-public class BulletSpawner : ObjectSpawner
+public class BulletSpawner : ObjectSpawner, IServisable
 {
     protected override void MakeCreate(ObjectSpawnerItem item)
     {

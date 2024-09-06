@@ -282,6 +282,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 238743506}
+  - component: {fileID: 238743507}
   m_Layer: 0
   m_Name: UFOSpawner
   m_TagString: Untagged
@@ -304,6 +305,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &238743507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 238743505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e35e51a947abd504c964f993e53ffa5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectSpawnerItem: {fileID: 2170480482220658505, guid: e804148cad947fe43b10c281ad1a9e13, type: 3}
+  _collectionCheck: 1
+  _defaultCapacity: 10
+  _maxSize: 10000
 --- !u!1 &244362295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1300,6 +1317,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 764051659}
   m_CullTransparentMesh: 1
+--- !u!1 &782786590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782786592}
+  - component: {fileID: 782786591}
+  m_Layer: 0
+  m_Name: GameLauncher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &782786591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782786590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2195695153e932f47a43f088936bf4c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameSettingsData: {fileID: 11400000, guid: b594de69d401d5841b4dfcd6d247c6a5, type: 2}
+  _playerVehicle: {fileID: 1047637693}
+  _bulletSpawner: {fileID: 238743507}
+  _gameWindow: {fileID: 1876824059}
+--- !u!4 &782786592
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782786590}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.165386, y: 0.39662457, z: -0.022107419}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1392,17 +1457,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &975972288 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6772791321299641943, guid: d8f79de78c1994641a6d4ac232500aac, type: 3}
-  m_PrefabInstance: {fileID: 5953406086330818579}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b66349ff790bed744b089e2664a7a19f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1018084643
 GameObject:
   m_ObjectHideFlags: 0
@@ -1687,6 +1741,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1041173557}
   m_CullTransparentMesh: 1
+--- !u!114 &1047637693 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6165378735005106091, guid: d8f79de78c1994641a6d4ac232500aac, type: 3}
+  m_PrefabInstance: {fileID: 5953406086330818579}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4f00a6e8cb41c440bba9e7a4be8fda9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1154064308
 GameObject:
   m_ObjectHideFlags: 0
@@ -2133,7 +2198,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1c5206f450f0f499917550b9762c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerMovement: {fileID: 975972288}
   _pointsText: {fileID: 1041173560}
   _coordinatesText: {fileID: 53874847}
   _rotationText: {fileID: 312001482}
@@ -2330,6 +2394,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7984358229521832525, guid: d8f79de78c1994641a6d4ac232500aac, type: 3}
+      propertyPath: _bulletSpawner
+      value: 
+      objectReference: {fileID: 238743507}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2345,5 +2413,6 @@ SceneRoots:
   - {fileID: 1209148552}
   - {fileID: 238743506}
   - {fileID: 244362297}
+  - {fileID: 782786592}
   - {fileID: 272184852}
   - {fileID: 1154064311}

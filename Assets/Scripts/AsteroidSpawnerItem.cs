@@ -7,7 +7,7 @@ public class AsteroidSpawnerItem : ObjectSpawnerItem
 
     public event Action<Vector3> PlayerHitEvent = delegate { };
 
-    protected override void MakeCollide(Collision other)
+    protected void OnCollisionEnter(Collision other)
     {
         if (_playerBulletMask == (_playerBulletMask | (1 << other.gameObject.layer)))
         {

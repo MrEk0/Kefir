@@ -1,7 +1,7 @@
 using UnityEngine.Pool;
 using UnityEngine;
 
-public abstract class ObjectSpawner : MonoBehaviour
+public abstract class ObjectSpawner : MonoBehaviour, IServisable
 {
     [SerializeField] private ObjectSpawnerItem _objectSpawnerItem;
     [SerializeField] private bool _collectionCheck = true;

@@ -3,11 +3,10 @@ using UnityEngine;
 
 namespace UI
 {
-    public class GameWindow : MonoBehaviour
+    public class GameWindow : MonoBehaviour, IObservable
     {
         private const float CIRCLE_ANGLE = 360f;
         
-        [SerializeField] private PlayerMovement _playerMovement;
         [SerializeField] private TMP_Text _pointsText;
         [SerializeField] private TMP_Text _coordinatesText;
         [SerializeField] private TMP_Text _rotationText;
@@ -15,16 +14,15 @@ namespace UI
         [SerializeField] private TMP_Text _laserShotsText;
         [SerializeField] private TMP_Text _laserCountdownText;
 
-        private void OnEnable()
+        private PlayerMovement _playerMovement;
+        private PlayerAttack _playerAttack;
+       
+        public void Init(PlayerMovement playerMovement, PlayerAttack playerAttack)
         {
-            _playerMovement.PlayerRotateEvent += OnPlayerRotated;
+            _playerMovement = playerMovement;
+            _playerAttack = playerAttack;
         }
-
-        private void OnDisable()
-        {
-
-        }
-
+        
         private void OnPlayerRotated(float angle, float velocity, Vector2 coordinates)
         {
             var delta = -angle % CIRCLE_ANGLE;
@@ -33,9 +31,21 @@ namespace UI
             _coordinatesText.text = string.Format($"{coordinates.x:F1} : {coordinates.y:F1}");
         }
 
-        private void OnLaserShot()
+        private void OnLaserShot(Vector3 startPos, Vector3 endPos)
         {
+            
+        }
 
+        public void Subscribe()
+        {
+            _playerMovement.PlayerRotateEvent += OnPlayerRotated;
+            _playerAttack.LaserFireEvent += OnLaserShot;
+        }
+
+        public void Unsubscribe()
+        {
+            _playerMovement.PlayerRotateEvent -= OnPlayerRotated;
+            _playerAttack.LaserFireEvent -= OnLaserShot;
         }
     }
 }
