@@ -1,4 +1,7 @@
-public interface IServisable
+namespace Interfaces
 {
-    
+    public interface IServisable
+    {
+
+    }
 }

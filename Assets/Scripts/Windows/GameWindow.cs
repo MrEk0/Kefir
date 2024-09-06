@@ -1,5 +1,7 @@
+using Configs;
 using TMPro;
 using UnityEngine;
+using Interfaces;
 
 namespace UI
 {
@@ -16,11 +18,16 @@ namespace UI
 
         private PlayerMovement _playerMovement;
         private PlayerAttack _playerAttack;
+        private ServiceLocator _serviceLocator;
+
+        private int _count;
        
-        public void Init(PlayerMovement playerMovement, PlayerAttack playerAttack)
+        public void Init(ServiceLocator serviceLocator, PlayerMovement playerMovement, PlayerAttack playerAttack)
         {
+            _serviceLocator = serviceLocator;
             _playerMovement = playerMovement;
             _playerAttack = playerAttack;
+            
         }
         
         private void OnPlayerRotated(float angle, float velocity, Vector2 coordinates)
@@ -36,16 +43,24 @@ namespace UI
             
         }
 
+        private void OnEnemyKilled()
+        {
+            _count += _serviceLocator.GetService<GameSettingsData>().CoinsForAsteroid;
+            _pointsText.text = _count.ToString();
+        }
+
         public void Subscribe()
         {
             _playerMovement.PlayerRotateEvent += OnPlayerRotated;
             _playerAttack.LaserFireEvent += OnLaserShot;
+            _playerAttack.EnemyKillEvent += OnEnemyKilled;
         }
 
         public void Unsubscribe()
         {
             _playerMovement.PlayerRotateEvent -= OnPlayerRotated;
             _playerAttack.LaserFireEvent -= OnLaserShot;
+            _playerAttack.EnemyKillEvent -= OnEnemyKilled;
         }
     }
 }

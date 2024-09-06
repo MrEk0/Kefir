@@ -1,28 +1,29 @@
 using System.Collections.Generic;
+using Interfaces;
 
 public class GameObserver : IServisable
 {
-    private readonly List<IObservable> listeners = new();
+    private readonly List<IObservable> _listeners = new();
     
     public void AddListener(IObservable listener)
     {
         listener.Subscribe();
-        listeners.Add(listener);
+        _listeners.Add(listener);
     }
 
     public void RemoveListener(IObservable listener)
     {
         listener.Unsubscribe();
-        listeners.Remove(listener);
+        _listeners.Remove(listener);
     }
 
     public void RemoveAll()
     {
-        foreach (var listener in listeners)
+        foreach (var listener in _listeners)
         {
             listener.Unsubscribe();
         }
 
-        listeners.Clear();
+        _listeners.Clear();
     }
 }

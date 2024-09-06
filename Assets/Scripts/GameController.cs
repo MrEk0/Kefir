@@ -1,13 +1,23 @@
-using System.Collections.Generic;
+using Windows;
 using UnityEngine;
+using Interfaces;
 
 public class GameController : MonoBehaviour
 {
     [SerializeField] private GameInstaller _gameInstaller;
-    [SerializeField] private BulletSpawner _bulletSpawner;
-
-    private readonly List<IGameUpdatable> _updateListeners = new();
+    [SerializeField] private PlayerVehicle _playerVehicle;
+    [SerializeField] private WindowSystem _windowSystem;
     
+    private void OnEnable()
+    {
+        _playerVehicle.DeadEvent += OnPlayerDead;
+    }
+
+    private void OnDisable()
+    {
+        _playerVehicle.DeadEvent -= OnPlayerDead;
+    }
+
     private void Start()
     {
         StartGame();
@@ -16,8 +26,6 @@ public class GameController : MonoBehaviour
     private void StartGame()
     {
         _gameInstaller.InstallBindings(this);
-
-        _bulletSpawner.Init();
     }
 
     private void Replay()
@@ -27,22 +35,13 @@ public class GameController : MonoBehaviour
         StartGame();
     }
 
-    public void AddListener(IGameUpdatable listener)
+    private void OnPlayerDead()
     {
-        _updateListeners.Add(listener);
-    }
-    
-    public void RemoveListener(IGameUpdatable listener)
-    {
-        _updateListeners.Remove(listener);
-    }
-    
-    private void Update()
-    {
-        var deltaTime = Time.deltaTime;
-        for (var i = 0; i < _updateListeners.Count; i++)
+        var setUp = new GameOverWindowSetup
         {
-            _updateListeners[i].OnUpdate(deltaTime);
-        }
+            Score = 0,
+            WindowSystem = _windowSystem
+        };
+        _windowSystem.Open<GameOverWindow, GameOverWindowSetup>(setUp);
     }
 }

@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Interfaces;
 
 public class PlayerAttack : IObservable, ILaserAttackable
 {
     public event Action<Vector3, Vector3> LaserFireEvent = delegate { };
+    public event Action EnemyKillEvent = delegate { };
     
     private readonly List<Transform> _firePositions = new();
     
@@ -15,16 +16,20 @@ public class PlayerAttack : IObservable, ILaserAttackable
     private readonly Transform _playerTransform;
     private readonly Transform _laserPosition;
     private readonly int _layerMask;
+    private readonly Bounds _screenBounds;
 
-    public PlayerAttack(ServiceLocator serviceLocator, IEnumerable<Transform> firePositions, Transform laserPosition, Transform transform, int attackMask)
+    public PlayerAttack(ServiceLocator serviceLocator, Bounds bounds, IEnumerable<Transform> firePositions, Transform laserPosition, Transform transform, int attackMask)
     {
         _inputSystem = serviceLocator.GetService<InputSystem>();
-        _bulletSpawner = serviceLocator.GetService<BulletSpawner>();
-        _firePositions.Clear();
-        _firePositions.AddRange(firePositions);
+        _bulletSpawner = serviceLocator.GetService<ObjectSpawner>();
+        
         _playerTransform = transform;
         _laserPosition = laserPosition;
         _layerMask = attackMask;
+        _screenBounds = bounds;
+        
+        _firePositions.Clear();
+        _firePositions.AddRange(firePositions);
     }
 
     public void Subscribe()
@@ -44,9 +49,18 @@ public class PlayerAttack : IObservable, ILaserAttackable
         foreach (var tr in _firePositions)
         {
             var bullet = _bulletSpawner.ObjectPool.Get();
+            
             var bulletTr = bullet.transform;
             bulletTr.position = tr.position;
             bulletTr.rotation = _playerTransform.rotation;
+            
+            bullet.Init(new Bounds(_screenBounds.center, _screenBounds.size * 1.5f), other =>
+            {
+                EnemyKillEvent();
+                
+                var target = other.transform.GetComponent<IDamagable>();
+                target?.TakeDamage();
+            });
         }
     }
 
@@ -60,7 +74,8 @@ public class PlayerAttack : IObservable, ILaserAttackable
             var target = result.transform.GetComponent<IDamagable>();
             target?.TakeDamage();
         }
-
-        LaserFireEvent(laserPos, laserPos + _playerTransform.up * 10);
+        
+        LaserFireEvent(laserPos, laserPos + _playerTransform.up * Vector2.Distance(_screenBounds.max, _screenBounds.center));
+        EnemyKillEvent();
     }
 }

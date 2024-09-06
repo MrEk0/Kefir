@@ -1,7 +1,10 @@
 using System;
 using UnityEngine;
 
-public interface ILaserAttackable
+namespace Interfaces
 {
-    public event Action<Vector3, Vector3> LaserFireEvent;
+    public interface ILaserAttackable
+    {
+        public event Action<Vector3, Vector3> LaserFireEvent;
+    }
 }

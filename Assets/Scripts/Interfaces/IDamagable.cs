@@ -1,4 +1,7 @@
-public interface IDamagable
+namespace Interfaces
 {
-    public void TakeDamage();
+    public interface IDamagable
+    {
+        public void TakeDamage();
+    }
 }

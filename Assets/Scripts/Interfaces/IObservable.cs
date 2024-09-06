@@ -1,5 +1,8 @@
-public interface IObservable
+namespace Interfaces
 {
-    public void Subscribe();
-    public void Unsubscribe();
+    public interface IObservable
+    {
+        public void Subscribe();
+        public void Unsubscribe();
+    }
 }

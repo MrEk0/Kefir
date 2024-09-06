@@ -1,5 +1,6 @@
 using Configs;
 using UnityEngine;
+using Interfaces;
 
 public class LineRendererActivator : IObservable, IGameUpdatable
 {

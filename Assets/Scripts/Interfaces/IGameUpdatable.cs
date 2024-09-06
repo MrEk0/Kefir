@@ -1,4 +1,7 @@
-public interface IGameUpdatable
+namespace Interfaces
 {
-    void OnUpdate(float deltaTime);
+    public interface IGameUpdatable
+    {
+        void OnUpdate(float deltaTime);
+    }
 }

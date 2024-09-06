@@ -1,49 +1,43 @@
 using UnityEngine.Pool;
 using UnityEngine;
+using Interfaces;
 
-public abstract class ObjectSpawner : MonoBehaviour, IServisable
+public class ObjectSpawner : MonoBehaviour, IServisable
 {
-    [SerializeField] private ObjectSpawnerItem _objectSpawnerItem;
+    [SerializeField] private ObjectPoolItem objectPoolItem;
     [SerializeField] private bool _collectionCheck = true;
     [SerializeField] private int _defaultCapacity = 10;
     [SerializeField] private int _maxSize = 10000;
     
-    private IObjectPool<ObjectSpawnerItem> _objectPool;
+    private IObjectPool<ObjectPoolItem> _objectPool;
 
-    public IObjectPool<ObjectSpawnerItem> ObjectPool => _objectPool;
+    public IObjectPool<ObjectPoolItem> ObjectPool => _objectPool;
 
     public void Init()
     {
-        _objectPool = new ObjectPool<ObjectSpawnerItem>(CreateProjectile, OnGetFromPool, OnReleaseToPool, OnDestroyPooledObject, _collectionCheck, _defaultCapacity, _maxSize);
+        _objectPool = new ObjectPool<ObjectPoolItem>(CreateProjectile, OnGetFromPool, OnReleaseToPool, OnDestroyPooledObject, _collectionCheck, _defaultCapacity, _maxSize);
     }
 
-    protected virtual void MakeDestroy(ObjectSpawnerItem item) { }
-    protected virtual void MakeCreate(ObjectSpawnerItem item) { }
-
-    private ObjectSpawnerItem CreateProjectile()
+    private ObjectPoolItem CreateProjectile()
     {
-        var spawnerItem = Instantiate(_objectSpawnerItem, transform);
+        var spawnerItem = Instantiate(objectPoolItem, transform);
         spawnerItem.ObjectPool = _objectPool;
-        
-        MakeCreate(spawnerItem);
-        
+
         return spawnerItem;
     }
   
-    private void OnReleaseToPool(ObjectSpawnerItem pooledObject)
+    private void OnReleaseToPool(ObjectPoolItem pooledObject)
     {
         pooledObject.gameObject.SetActive(false);
     }
     
-    private void OnGetFromPool(ObjectSpawnerItem pooledObject)
+    private void OnGetFromPool(ObjectPoolItem pooledObject)
     {
         pooledObject.gameObject.SetActive(true);
     }
    
-    private void OnDestroyPooledObject(ObjectSpawnerItem pooledObject)
+    private void OnDestroyPooledObject(ObjectPoolItem pooledObject)
     {
-        MakeDestroy(pooledObject);
-        
         Destroy(pooledObject.gameObject);
     }
 }
