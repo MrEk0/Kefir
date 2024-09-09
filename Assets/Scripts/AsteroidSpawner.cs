@@ -8,7 +8,7 @@ public class AsteroidSpawner : IGameUpdatable, IServisable
 {
     public event Action<Vector3, Quaternion> AsteroidKilledEvent = delegate { };
     
-    private readonly AttackableObjectPoolCreator _asteroidPoolCreator;
+    private readonly AttackerObjectPoolCreator _asteroidPoolCreator;
     private readonly PlayerVehicle _playerVehicle;
     
     private readonly float _pause;
@@ -17,7 +17,7 @@ public class AsteroidSpawner : IGameUpdatable, IServisable
     private float _timer;
     private Bounds _bounds;
 
-    public AsteroidSpawner(ServiceLocator serviceLocator, AttackableObjectPoolCreator asteroidPoolCreator, Bounds bounds)
+    public AsteroidSpawner(ServiceLocator serviceLocator, AttackerObjectPoolCreator asteroidPoolCreator, Bounds bounds)
     {
         _asteroidPoolCreator = asteroidPoolCreator;
         _bounds = bounds;
@@ -53,7 +53,7 @@ public class AsteroidSpawner : IGameUpdatable, IServisable
         tr.position = position;
         tr.rotation = rotation;
 
-        if (newAsteroid is AsteroidPoolItem item)
+        if (newAsteroid is DamageReceiverPoolItem item)
         {
             item.Init(poolItem =>
             {

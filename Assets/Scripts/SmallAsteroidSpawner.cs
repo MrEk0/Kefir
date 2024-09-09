@@ -8,13 +8,13 @@ public class SmallAsteroidSpawner : IObservable, IServisable
 {
     public event Action SmallAsteroidKilledEvent = delegate { };
     
-    private readonly AttackableObjectPoolCreator _objectPoolCreator;
+    private readonly AttackerObjectPoolCreator _objectPoolCreator;
     private readonly AsteroidSpawner _asteroidSpawner;
 
     private readonly Vector2 _angleRange;
     private readonly int _extraAsteroidCounts;
 
-    public SmallAsteroidSpawner(ServiceLocator serviceLocator, AttackableObjectPoolCreator objectPoolCreator)
+    public SmallAsteroidSpawner(ServiceLocator serviceLocator, AttackerObjectPoolCreator objectPoolCreator)
     {
         _objectPoolCreator = objectPoolCreator;
 
@@ -46,7 +46,7 @@ public class SmallAsteroidSpawner : IObservable, IServisable
             tr.position = position;
             tr.rotation = newRotation;
 
-            if (newAsteroid is AsteroidPoolItem item)
+            if (newAsteroid is DamageReceiverPoolItem item)
             {
                 item.Init(poolItem =>
                 {

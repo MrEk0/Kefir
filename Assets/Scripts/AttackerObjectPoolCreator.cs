@@ -3,9 +3,9 @@ using Interfaces;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class AttackableObjectPoolCreator : ObjectPoolCreator
+public class AttackerObjectPoolCreator : ObjectPoolCreator
 {
-    [SerializeField] private AttackablePoolItem _poolItem;
+    [SerializeField] private AttackerPoolItem _poolItem;
     
     private Bounds _bounds;
     private GameUpdater _gameUpdater;
@@ -46,13 +46,13 @@ public class AttackableObjectPoolCreator : ObjectPoolCreator
             _objectMovements.Remove(pooledObject.gameObject);
         }
 
-        if (pooledObject is AttackablePoolItem item)
+        if (pooledObject is AttackerPoolItem item)
             item.CollisionEvent -= OnCollision;
         
         Destroy(pooledObject.gameObject);
     }
 
-    private void OnCollision(Collider2D other, AttackablePoolItem pooledObject)
+    private void OnCollision(Collider2D other, AttackerPoolItem pooledObject)
     {
         var target = other.transform.GetComponent<IDamagable>();
         target?.TakeDamage();

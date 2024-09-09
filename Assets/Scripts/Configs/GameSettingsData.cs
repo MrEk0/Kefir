@@ -1,6 +1,5 @@
 using UnityEngine;
 using Interfaces;
-using UnityEngine.Serialization;
 
 namespace Configs
 {
@@ -9,10 +8,10 @@ namespace Configs
     {
         [SerializeField] private int _playerVelocity = 0;
         [SerializeField] private int _playerAngleVelocity = 0;
-        [SerializeField] private int _bulletVelocity = 0;
         [SerializeField] private int _maxLaserShotCount = 0;
         [SerializeField] private float _laserDuration;
         [SerializeField] private float _asteroidSpawnPause;
+        [SerializeField] private float _ufoSpawnPause;
         [SerializeField] private int _asteroidOnBulletHitCount;
         [SerializeField] private int _coinsForAsteroid;
         [SerializeField] private int _coinsForSmallAsteroid;
@@ -26,6 +25,7 @@ namespace Configs
         public int MaxLaserShotCount => _maxLaserShotCount;
         public float LaserDuration => _laserDuration;
         public float AsteroidSpawnPause => _asteroidSpawnPause;
+        public float UFOSpawnPause => _ufoSpawnPause;
         public int AsteroidOnBulletHitCount => _asteroidOnBulletHitCount;
         public int CoinsForAsteroid => _coinsForAsteroid;
         public int CoinsForSmallAsteroid => _coinsForSmallAsteroid;

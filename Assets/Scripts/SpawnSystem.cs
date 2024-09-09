@@ -8,14 +8,15 @@ public class SpawnSystem : IObservable, IServisable
 {
     public event Action<int> ObjectKilledEvent = delegate { };
     
-    private AttackableObjectPoolCreator _bulletPoolCreator;
+    private AttackerObjectPoolCreator _bulletPoolCreator;
     private AsteroidSpawner _asteroidSpawner;
     private SmallAsteroidSpawner _smallAsteroidSpawner;
+    private UFOSpawner _ufoSpawner;
     private ServiceLocator _serviceLocator;
     
-    public SpawnSystem(ServiceLocator serviceLocator, AttackableObjectPoolCreator asteroidPoolCreator,
-        AttackableObjectPoolCreator smallAsteroidPoolCreator, AttackableObjectPoolCreator bulletPoolCreator,
-        Bounds screenBounds)
+    public SpawnSystem(ServiceLocator serviceLocator, AttackerObjectPoolCreator asteroidPoolCreator,
+        AttackerObjectPoolCreator smallAsteroidPoolCreator, AttackerObjectPoolCreator bulletPoolCreator,
+        TargetFollowerObjectPoolCreator ufoPoolCreator, Bounds screenBounds)
     {
         _bulletPoolCreator = bulletPoolCreator;
         _serviceLocator = serviceLocator;
@@ -27,15 +28,19 @@ public class SpawnSystem : IObservable, IServisable
         _bulletPoolCreator.Init(activeObjectBounds, serviceLocator);
         asteroidPoolCreator.Init(activeObjectBounds, serviceLocator);
         smallAsteroidPoolCreator.Init(activeObjectBounds, serviceLocator);
+        ufoPoolCreator.Init(activeObjectBounds, serviceLocator.GetService<PlayerVehicle>().transform, serviceLocator);
 
         _asteroidSpawner = new AsteroidSpawner(serviceLocator, asteroidPoolCreator, screenBounds);
         serviceLocator.AddService(_asteroidSpawner);
+        gameUpdater.AddListener(_asteroidSpawner);
         
         _smallAsteroidSpawner = new SmallAsteroidSpawner(serviceLocator, smallAsteroidPoolCreator);
         serviceLocator.AddService(_smallAsteroidSpawner);
-        
-        gameUpdater.AddListener(_asteroidSpawner);
         gameObserver.AddListener(_smallAsteroidSpawner);
+
+        _ufoSpawner = new UFOSpawner(serviceLocator, ufoPoolCreator, screenBounds);
+        _serviceLocator.AddService(_ufoSpawner);
+        gameUpdater.AddListener(_ufoSpawner);
     }
 
     public void SpawnPlayerProjectiles(IEnumerable<Transform> firePositions, Transform player)
@@ -54,12 +59,14 @@ public class SpawnSystem : IObservable, IServisable
     {
         _asteroidSpawner.AsteroidKilledEvent += OnAsteroidKilled;
         _smallAsteroidSpawner.SmallAsteroidKilledEvent += OnSmallAsteroidKilled;
+        _ufoSpawner.UFOKilledEvent += OnUFOKilled;
     }
 
     public void Unsubscribe()
     {
         _asteroidSpawner.AsteroidKilledEvent -= OnAsteroidKilled;
         _smallAsteroidSpawner.SmallAsteroidKilledEvent -= OnSmallAsteroidKilled;
+        _ufoSpawner.UFOKilledEvent -= OnUFOKilled;
     }
 
     private void OnAsteroidKilled(Vector3 position, Quaternion rotation)
@@ -70,5 +77,10 @@ public class SpawnSystem : IObservable, IServisable
     private void OnSmallAsteroidKilled()
     {
         ObjectKilledEvent(_serviceLocator.GetService<GameSettingsData>().CoinsForSmallAsteroid);
+    }
+
+    private void OnUFOKilled()
+    {
+        ObjectKilledEvent(_serviceLocator.GetService<GameSettingsData>().CoinsForUFO);
     }
 }

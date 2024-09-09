@@ -60,6 +60,6 @@ public class PlayerAttack : IObservable, ILaserAttackable
             target?.TakeDamage();
         }
         
-        LaserFireEvent(laserPos, laserPos + _playerTransform.up * Vector2.Distance(_screenBounds.max, _screenBounds.center));
+        LaserFireEvent(laserPos, laserPos + _playerTransform.up * Vector2.Distance(_screenBounds.max, _screenBounds.min));
     }
 }

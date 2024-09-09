@@ -9,9 +9,10 @@ public class GameInstaller : MonoBehaviour
     [SerializeField] private PlayerVehicle _playerVehicle;
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private GameSettingsData _gameSettingsData;
-    [SerializeField] private AttackableObjectPoolCreator bulletPoolCreator;
-    [SerializeField] private AttackableObjectPoolCreator asteroidPoolCreator;
-    [SerializeField] private AttackableObjectPoolCreator smallAsteroidPoolCreator;
+    [SerializeField] private AttackerObjectPoolCreator bulletPoolCreator;
+    [SerializeField] private AttackerObjectPoolCreator asteroidPoolCreator;
+    [SerializeField] private AttackerObjectPoolCreator smallAsteroidPoolCreator;
+    [SerializeField] private TargetFollowerObjectPoolCreator ufoPoolCreator;
     [SerializeField] private GameWindow _gameWindow;
     
     [CanBeNull]
@@ -37,7 +38,7 @@ public class GameInstaller : MonoBehaviour
         _serviceLocator.AddService(_playerVehicle);
         _serviceLocator.AddService(_gameUpdater);
 
-        var spawnSystem = new SpawnSystem(_serviceLocator, asteroidPoolCreator, smallAsteroidPoolCreator, bulletPoolCreator, bounds);
+        var spawnSystem = new SpawnSystem(_serviceLocator, asteroidPoolCreator, smallAsteroidPoolCreator, bulletPoolCreator, ufoPoolCreator, bounds);
         _serviceLocator.AddService(spawnSystem);
         _gameObserver.AddListener(spawnSystem);
         

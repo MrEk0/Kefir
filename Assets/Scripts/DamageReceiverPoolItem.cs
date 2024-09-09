@@ -2,12 +2,10 @@ using System;
 using Interfaces;
 using JetBrains.Annotations;
 
-public class AsteroidPoolItem : AttackablePoolItem, IDamagable
+public class DamageReceiverPoolItem : AttackerPoolItem, IDamagable
 {
     [CanBeNull]
     private Action<ObjectPoolItem> _takeDamageAction;
-
-    private bool _isDamaged;
 
     public void Init(Action<ObjectPoolItem> action)
     {
@@ -16,10 +14,6 @@ public class AsteroidPoolItem : AttackablePoolItem, IDamagable
     
     public void TakeDamage()
     {
-        if (_isDamaged)
-            return;
-
-        _isDamaged = true;
         _takeDamageAction?.Invoke(this);
     }
 }
