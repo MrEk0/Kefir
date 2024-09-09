@@ -10,6 +10,7 @@ namespace Configs
         [SerializeField] private int _playerAngleVelocity = 0;
         [SerializeField] private int _maxLaserShotCount = 0;
         [SerializeField] private float _laserDuration;
+        [SerializeField] private float _laserRecoveryTime;
         [SerializeField] private float _asteroidSpawnPause;
         [SerializeField] private float _ufoSpawnPause;
         [SerializeField] private int _asteroidOnBulletHitCount;
@@ -24,6 +25,7 @@ namespace Configs
         public int PlayerAngleVelocity => _playerAngleVelocity;
         public int MaxLaserShotCount => _maxLaserShotCount;
         public float LaserDuration => _laserDuration;
+        public float LaserRecoveryTime => _laserRecoveryTime;
         public float AsteroidSpawnPause => _asteroidSpawnPause;
         public float UFOSpawnPause => _ufoSpawnPause;
         public int AsteroidOnBulletHitCount => _asteroidOnBulletHitCount;

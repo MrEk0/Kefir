@@ -1,6 +1,5 @@
 using Windows;
 using UnityEngine;
-using Interfaces;
 
 public class GameController : MonoBehaviour
 {
@@ -21,6 +20,12 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         StartGame();
+
+        if (_gameInstaller.ServiceLocator == null)
+            return;
+
+        var windowSetup = new GameWindowSetup { ServiceLocator = _gameInstaller.ServiceLocator };
+        _windowSystem.Open<GameWindow, GameWindowSetup>(windowSetup);
     }
 
     private void StartGame()
@@ -32,16 +37,18 @@ public class GameController : MonoBehaviour
     {
         _gameInstaller.ClearBindings();
         
+        _windowSystem.Close<GameWindow>();
+        
         StartGame();
     }
 
     private void OnPlayerDead()
     {
-        var setUp = new GameOverWindowSetup
+        var windowSetup = new GameOverWindowSetup
         {
             Score = 0,
             WindowSystem = _windowSystem
         };
-        _windowSystem.Open<GameOverWindow, GameOverWindowSetup>(setUp);
+        _windowSystem.Open<GameOverWindow, GameOverWindowSetup>(windowSetup);
     }
 }

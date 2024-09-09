@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerVelocity: 5
   _playerAngleVelocity: 5
-  _maxLaserShotCount: 5
+  _maxLaserShotCount: 2
   _laserDuration: 0.1
+  _laserRecoveryTime: 4
   _asteroidSpawnPause: 2
   _ufoSpawnPause: 2
   _asteroidOnBulletHitCount: 2

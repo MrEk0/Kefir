@@ -15,6 +15,11 @@ public class GameUpdater : MonoBehaviour, IServisable
     {
         _updateListeners.Remove(listener);
     }
+
+    public void RemoveAll()
+    {
+        _updateListeners.Clear();
+    }
     
     private void Update()
     {

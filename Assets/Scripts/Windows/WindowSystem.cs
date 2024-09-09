@@ -6,8 +6,9 @@ namespace Windows
 {
     public class WindowSystem : MonoBehaviour
     {
+        [SerializeField] private Transform _windowsParent;
         [SerializeField] private ASimpleWindow[] _windowsPrefabs;
-        
+
         private readonly Dictionary<Type, ASimpleWindow> _windows = new();
         private readonly Dictionary<Type, ASimpleWindow> _openedWindows = new();
         
@@ -28,7 +29,7 @@ namespace Windows
                 return;
 
             var window = _windows[windowType];
-            var aWindow = Instantiate<AWindow<TSetup>>((TWindow)window, transform);
+            var aWindow = Instantiate<AWindow<TSetup>>((TWindow)window, _windowsParent);
             _openedWindows.Add(windowType, aWindow);
 
             aWindow.Init(setup);

@@ -21,26 +21,12 @@ public class SpawnSystem : IObservable, IServisable
         _bulletPoolCreator = bulletPoolCreator;
         _serviceLocator = serviceLocator;
         
-        var gameUpdater = serviceLocator.GetService<GameUpdater>();
-        var gameObserver = serviceLocator.GetService<GameObserver>();
-        var activeObjectBounds = new Bounds(screenBounds.center, screenBounds.size * 1.5f);
+        var activeObjectBounds = new Bounds(screenBounds.center, screenBounds.size * 1.5f);//todo change
         
         _bulletPoolCreator.Init(activeObjectBounds, serviceLocator);
         asteroidPoolCreator.Init(activeObjectBounds, serviceLocator);
         smallAsteroidPoolCreator.Init(activeObjectBounds, serviceLocator);
         ufoPoolCreator.Init(activeObjectBounds, serviceLocator.GetService<PlayerVehicle>().transform, serviceLocator);
-
-        _asteroidSpawner = new AsteroidSpawner(serviceLocator, asteroidPoolCreator, screenBounds);
-        serviceLocator.AddService(_asteroidSpawner);
-        gameUpdater.AddListener(_asteroidSpawner);
-        
-        _smallAsteroidSpawner = new SmallAsteroidSpawner(serviceLocator, smallAsteroidPoolCreator);
-        serviceLocator.AddService(_smallAsteroidSpawner);
-        gameObserver.AddListener(_smallAsteroidSpawner);
-
-        _ufoSpawner = new UFOSpawner(serviceLocator, ufoPoolCreator, screenBounds);
-        _serviceLocator.AddService(_ufoSpawner);
-        gameUpdater.AddListener(_ufoSpawner);
     }
 
     public void SpawnPlayerProjectiles(IEnumerable<Transform> firePositions, Transform player)

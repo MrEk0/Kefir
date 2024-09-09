@@ -2,9 +2,9 @@ using TMPro;
 using UnityEngine;
 using Interfaces;
 
-namespace UI
+namespace Windows
 {
-    public class GameWindow : MonoBehaviour, IObservable
+    public class GameWindow : AWindow<GameWindowSetup>, IObservable
     {
         private const float CIRCLE_ANGLE = 360f;
         
@@ -13,21 +13,37 @@ namespace UI
         [SerializeField] private TMP_Text _rotationText;
         [SerializeField] private TMP_Text _velocityText;
         [SerializeField] private TMP_Text _laserShotsText;
-        [SerializeField] private TMP_Text _laserCountdownText;
+        [SerializeField] private TMP_Text _laserTimerText;
 
         private PlayerMovement _playerMovement;
-        private PlayerAttack _playerAttack;
+        private PlayerLaserAttack _playerAttack;
         private SpawnSystem _spawnSystem;
 
         private int _currentPoints;
-       
-        public void Init(ServiceLocator serviceLocator, PlayerMovement playerMovement, PlayerAttack playerAttack)
+        
+        public override void Init(GameWindowSetup windowSetup)
         {
-            _playerMovement = playerMovement;
-            _playerAttack = playerAttack;
-            _spawnSystem = serviceLocator.GetService<SpawnSystem>();
+            _playerMovement = windowSetup.ServiceLocator.GetService<PlayerMovement>();
+            _playerAttack = windowSetup.ServiceLocator.GetService<PlayerLaserAttack>();
+            _spawnSystem = windowSetup.ServiceLocator.GetService<SpawnSystem>();
 
             _pointsText.text = _currentPoints.ToString();
+        }
+        
+        public void Subscribe()
+        {
+            _playerMovement.PlayerMoveEvent += OnPlayerMoved;
+            _playerAttack.LaserShotEvent += OnLaserShot;
+            _playerAttack.LaserTimerEvent += OnLaserTimerUpdate;
+            _spawnSystem.ObjectKilledEvent += OnEnemyKilled;
+        }
+
+        public void Unsubscribe()
+        {
+            _playerMovement.PlayerMoveEvent -= OnPlayerMoved;
+            _playerAttack.LaserShotEvent -= OnLaserShot;
+            _playerAttack.LaserTimerEvent -= OnLaserTimerUpdate;
+            _spawnSystem.ObjectKilledEvent -= OnEnemyKilled;
         }
         
         private void OnPlayerMoved(float angle, float velocity, Vector2 coordinates)
@@ -38,29 +54,20 @@ namespace UI
             _coordinatesText.text = string.Format($"{coordinates.x:F1} : {coordinates.y:F1}");
         }
 
-        private void OnLaserShot(Vector3 startPos, Vector3 endPos)
+        private void OnLaserTimerUpdate(float timer)
         {
-            
+            _laserTimerText.text = string.Format($"{timer:F1}");
+        }
+
+        private void OnLaserShot(int shotsCount)
+        {
+            _laserShotsText.text = shotsCount.ToString();
         }
 
         private void OnEnemyKilled(int points)
         {
             _currentPoints += points;
             _pointsText.text = _currentPoints.ToString();
-        }
-
-        public void Subscribe()
-        {
-            _playerMovement.PlayerMoveEvent += OnPlayerMoved;
-            _playerAttack.LaserFireEvent += OnLaserShot;
-            _spawnSystem.ObjectKilledEvent += OnEnemyKilled;
-        }
-
-        public void Unsubscribe()
-        {
-            _playerMovement.PlayerMoveEvent -= OnPlayerMoved;
-            _playerAttack.LaserFireEvent -= OnLaserShot;
-            _spawnSystem.ObjectKilledEvent -= OnEnemyKilled;
         }
     }
 }
