@@ -314,13 +314,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 238743505}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a229636f798db644b2ed246a0d0ea6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 681672f14525b034a836b9d91557747b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectPoolItem: {fileID: 7852922213814761296, guid: e804148cad947fe43b10c281ad1a9e13, type: 3}
-  _collectionCheck: 1
-  _defaultCapacity: 10
-  _maxSize: 10000
+  _poolItem: {fileID: 9133949629786278346, guid: e804148cad947fe43b10c281ad1a9e13, type: 3}
 --- !u!1 &244362295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1785,9 +1782,9 @@ MonoBehaviour:
   _playerVehicle: {fileID: 1047637693}
   _mainCamera: {fileID: 963194227}
   _gameSettingsData: {fileID: 11400000, guid: b594de69d401d5841b4dfcd6d247c6a5, type: 2}
-  _bulletSpawner: {fileID: 238743507}
-  _asteroidSpawner: {fileID: 1470909373}
-  _smallAsteroidSpawner: {fileID: 1209148553}
+  bulletPoolCreator: {fileID: 238743507}
+  asteroidPoolCreator: {fileID: 1470909373}
+  smallAsteroidPoolCreator: {fileID: 1209148553}
   _gameWindow: {fileID: 1876824059}
 --- !u!4 &1050465128
 Transform:
@@ -1935,13 +1932,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1209148551}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a229636f798db644b2ed246a0d0ea6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 681672f14525b034a836b9d91557747b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectPoolItem: {fileID: 1707638795965310954, guid: 2f3a187b8daf24a4cb3bf262390393ea, type: 3}
-  _collectionCheck: 1
-  _defaultCapacity: 10
-  _maxSize: 10000
+  _poolItem: {fileID: 1387150108334886056, guid: 2f3a187b8daf24a4cb3bf262390393ea, type: 3}
 --- !u!1 &1470909371
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,13 +1977,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1470909371}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a229636f798db644b2ed246a0d0ea6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 681672f14525b034a836b9d91557747b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectPoolItem: {fileID: 3223196895447926136, guid: 72c9c6c5cee460b44988b0a40ed6580e, type: 3}
-  _collectionCheck: 1
-  _defaultCapacity: 10
-  _maxSize: 10000
+  _poolItem: {fileID: 7728087772715251485, guid: 72c9c6c5cee460b44988b0a40ed6580e, type: 3}
 --- !u!1 &1753008010
 GameObject:
   m_ObjectHideFlags: 0
@@ -2655,6 +2646,10 @@ PrefabInstance:
     - target: {fileID: 7565111157521350829, guid: d8f79de78c1994641a6d4ac232500aac, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7565111157521350829, guid: d8f79de78c1994641a6d4ac232500aac, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7984358229521832525, guid: d8f79de78c1994641a6d4ac232500aac, type: 3}
       propertyPath: _bulletSpawner

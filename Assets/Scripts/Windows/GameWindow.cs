@@ -1,4 +1,3 @@
-using Configs;
 using TMPro;
 using UnityEngine;
 using Interfaces;
@@ -18,19 +17,20 @@ namespace UI
 
         private PlayerMovement _playerMovement;
         private PlayerAttack _playerAttack;
-        private ServiceLocator _serviceLocator;
+        private SpawnSystem _spawnSystem;
 
-        private int _count;
+        private int _currentPoints;
        
         public void Init(ServiceLocator serviceLocator, PlayerMovement playerMovement, PlayerAttack playerAttack)
         {
-            _serviceLocator = serviceLocator;
             _playerMovement = playerMovement;
             _playerAttack = playerAttack;
-            
+            _spawnSystem = serviceLocator.GetService<SpawnSystem>();
+
+            _pointsText.text = _currentPoints.ToString();
         }
         
-        private void OnPlayerRotated(float angle, float velocity, Vector2 coordinates)
+        private void OnPlayerMoved(float angle, float velocity, Vector2 coordinates)
         {
             var delta = -angle % CIRCLE_ANGLE;
             _rotationText.text = string.Format($"{(delta > 0f ? delta : Mathf.Abs(delta + CIRCLE_ANGLE)):F1}");
@@ -43,24 +43,24 @@ namespace UI
             
         }
 
-        private void OnEnemyKilled()
+        private void OnEnemyKilled(int points)
         {
-            _count += _serviceLocator.GetService<GameSettingsData>().CoinsForAsteroid;
-            _pointsText.text = _count.ToString();
+            _currentPoints += points;
+            _pointsText.text = _currentPoints.ToString();
         }
 
         public void Subscribe()
         {
-            _playerMovement.PlayerRotateEvent += OnPlayerRotated;
+            _playerMovement.PlayerMoveEvent += OnPlayerMoved;
             _playerAttack.LaserFireEvent += OnLaserShot;
-            _playerAttack.EnemyKillEvent += OnEnemyKilled;
+            _spawnSystem.ObjectKilledEvent += OnEnemyKilled;
         }
 
         public void Unsubscribe()
         {
-            _playerMovement.PlayerRotateEvent -= OnPlayerRotated;
+            _playerMovement.PlayerMoveEvent -= OnPlayerMoved;
             _playerAttack.LaserFireEvent -= OnLaserShot;
-            _playerAttack.EnemyKillEvent -= OnEnemyKilled;
+            _spawnSystem.ObjectKilledEvent -= OnEnemyKilled;
         }
     }
 }

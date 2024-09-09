@@ -17,15 +17,13 @@ MonoBehaviour:
   _bulletVelocity: 5
   _maxLaserShotCount: 5
   _laserDuration: 0.1
-  _asteroidSpawnPause: 1
-  _asteroidOnBulletHitCount: 5
-  _coinsForAsteroid: 5
+  _asteroidSpawnPause: 2
+  _asteroidOnBulletHitCount: 2
+  _coinsForAsteroid: 2
   _coinsForSmallAsteroid: 5
-  _coinsForUFO: 5
-  _asteroidTargetAngleRange: {x: 0.9, y: 1.1}
-  _enemyAttackMask:
-    serializedVersion: 2
-    m_Bits: 0
+  _coinsForUFO: 10
+  _asteroidAttackAngleRange: {x: 0.9, y: 1.1}
+  _smallAsteroidAttackAngleRange: {x: 0.6, y: 1.4}
   _playerAttackMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128

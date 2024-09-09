@@ -6,7 +6,7 @@ using Interfaces;
 
 public class PlayerMovement : IGameUpdatable, IServisable, IObservable
 {
-    public event Action<float, float, Vector2> PlayerRotateEvent = delegate { };
+    public event Action<float, float, Vector2> PlayerMoveEvent = delegate { };
 
     private readonly InputSystem _inputSystem;
     private readonly Transform _transform;
@@ -58,7 +58,7 @@ public class PlayerMovement : IGameUpdatable, IServisable, IObservable
         }
 
         var newTrPos = _transform.position;
-        PlayerRotateEvent(_angle, _gameSettingsData.PlayerVelocity, new Vector2(newTrPos.z, newTrPos.y));
+        PlayerMoveEvent(_angle, _gameSettingsData.PlayerVelocity, new Vector2(newTrPos.z, newTrPos.y));
     }
 
     private void OnMoveCanceled(InputAction.CallbackContext value)

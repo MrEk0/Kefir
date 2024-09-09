@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Configs;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Interfaces;
@@ -7,25 +8,24 @@ using Interfaces;
 public class PlayerAttack : IObservable, ILaserAttackable
 {
     public event Action<Vector3, Vector3> LaserFireEvent = delegate { };
-    public event Action EnemyKillEvent = delegate { };
-    
-    private readonly List<Transform> _firePositions = new();
     
     private readonly InputSystem _inputSystem;
-    private readonly ObjectSpawner _bulletSpawner;
+    private readonly SpawnSystem _spawnSystem;
     private readonly Transform _playerTransform;
     private readonly Transform _laserPosition;
-    private readonly int _layerMask;
     private readonly Bounds _screenBounds;
+    private readonly int _layerMask;
+    
+    private readonly List<Transform> _firePositions = new();
 
-    public PlayerAttack(ServiceLocator serviceLocator, Bounds bounds, IEnumerable<Transform> firePositions, Transform laserPosition, Transform transform, int attackMask)
+    public PlayerAttack(ServiceLocator serviceLocator, Bounds bounds, IEnumerable<Transform> firePositions, Transform laserPosition, Transform transform)
     {
         _inputSystem = serviceLocator.GetService<InputSystem>();
-        _bulletSpawner = serviceLocator.GetService<ObjectSpawner>();
+        _spawnSystem = serviceLocator.GetService<SpawnSystem>();
         
         _playerTransform = transform;
         _laserPosition = laserPosition;
-        _layerMask = attackMask;
+        _layerMask = serviceLocator.GetService<GameSettingsData>().PlayerAttackMask.value;
         _screenBounds = bounds;
         
         _firePositions.Clear();
@@ -46,22 +46,7 @@ public class PlayerAttack : IObservable, ILaserAttackable
 
     private void OnBulletAttack(InputAction.CallbackContext value)
     {
-        foreach (var tr in _firePositions)
-        {
-            var bullet = _bulletSpawner.ObjectPool.Get();
-            
-            var bulletTr = bullet.transform;
-            bulletTr.position = tr.position;
-            bulletTr.rotation = _playerTransform.rotation;
-            
-            bullet.Init(new Bounds(_screenBounds.center, _screenBounds.size * 1.5f), other =>
-            {
-                EnemyKillEvent();
-                
-                var target = other.transform.GetComponent<IDamagable>();
-                target?.TakeDamage();
-            });
-        }
+        _spawnSystem.SpawnPlayerProjectiles(_firePositions, _playerTransform);
     }
 
     private void OnLaserAttack(InputAction.CallbackContext value)
@@ -76,6 +61,5 @@ public class PlayerAttack : IObservable, ILaserAttackable
         }
         
         LaserFireEvent(laserPos, laserPos + _playerTransform.up * Vector2.Distance(_screenBounds.max, _screenBounds.center));
-        EnemyKillEvent();
     }
 }

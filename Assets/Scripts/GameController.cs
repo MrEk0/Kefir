@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
 
     private void StartGame()
     {
-        _gameInstaller.InstallBindings(this);
+        _gameInstaller.InstallBindings();
     }
 
     private void Replay()

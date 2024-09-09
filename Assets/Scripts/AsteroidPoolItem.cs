@@ -1,14 +1,25 @@
 using System;
 using Interfaces;
-using UnityEngine;
+using JetBrains.Annotations;
 
-public class AsteroidPoolItem : ObjectPoolItem, IDamagable
+public class AsteroidPoolItem : AttackablePoolItem, IDamagable
 {
-    public event Action<Vector3> TakeDamageEvent = delegate { };
+    [CanBeNull]
+    private Action<ObjectPoolItem> _takeDamageAction;
+
+    private bool _isDamaged;
+
+    public void Init(Action<ObjectPoolItem> action)
+    {
+        _takeDamageAction = action;
+    }
     
     public void TakeDamage()
     {
-        TakeDamageEvent(transform.position);
-        ObjectPool.Release(this);
+        if (_isDamaged)
+            return;
+
+        _isDamaged = true;
+        _takeDamageAction?.Invoke(this);
     }
 }

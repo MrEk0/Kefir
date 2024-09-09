@@ -9,9 +9,9 @@ public class GameInstaller : MonoBehaviour
     [SerializeField] private PlayerVehicle _playerVehicle;
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private GameSettingsData _gameSettingsData;
-    [SerializeField] private ObjectSpawner _bulletSpawner;
-    [SerializeField] private ObjectSpawner _asteroidSpawner;
-    [SerializeField] private ObjectSpawner _smallAsteroidSpawner;
+    [SerializeField] private AttackableObjectPoolCreator bulletPoolCreator;
+    [SerializeField] private AttackableObjectPoolCreator asteroidPoolCreator;
+    [SerializeField] private AttackableObjectPoolCreator smallAsteroidPoolCreator;
     [SerializeField] private GameWindow _gameWindow;
     
     [CanBeNull]
@@ -21,45 +21,39 @@ public class GameInstaller : MonoBehaviour
     [CanBeNull]
     private GameObserver _gameObserver;
 
-    public void InstallBindings(GameController gameController)
+    public void InstallBindings()
     {
+        var tr = _playerVehicle.transform;
+        var bounds = new Bounds(_mainCamera.transform.position,
+            new Vector3(_mainCamera.orthographicSize * _mainCamera.aspect * 2f, _mainCamera.orthographicSize * 2f, 0f));
+        
         _serviceLocator = new ServiceLocator();
         _inputSystem = new InputSystem();
         _gameObserver = new GameObserver();
-        
-        _bulletSpawner.Init();
-        _asteroidSpawner.Init();
-        _smallAsteroidSpawner.Init();
 
         _serviceLocator.AddService(_inputSystem);
-        _serviceLocator.AddService(_bulletSpawner);
         _serviceLocator.AddService(_gameSettingsData);
         _serviceLocator.AddService(_gameObserver);
-        _serviceLocator.AddService(_smallAsteroidSpawner);
         _serviceLocator.AddService(_playerVehicle);
         _serviceLocator.AddService(_gameUpdater);
 
-        var tr = _playerVehicle.transform;
-
-        var bounds = new Bounds(_mainCamera.transform.position,
-            new Vector3(_mainCamera.orthographicSize * _mainCamera.aspect * 2f, _mainCamera.orthographicSize * 2f, 0f));
-
-        var playerAttack = new PlayerAttack(_serviceLocator, bounds, _playerVehicle.FirePositions, _playerVehicle.LaserPosition, tr, _playerVehicle.AttackMaskValue);
-        var playerMovement = new PlayerMovement(_mainCamera, tr, _serviceLocator);
-        var playerLineRenderer = new LineRendererActivator(_serviceLocator, playerAttack, _playerVehicle.LineRenderer);
-        var asteroidSpawner = new AsteroidSpawnerController(_serviceLocator, _asteroidSpawner, _smallAsteroidSpawner, bounds);
-
-        _serviceLocator.AddService(playerMovement);
-
-        _gameUpdater.AddListener(playerMovement);
-        _gameUpdater.AddListener(playerLineRenderer);
-        _gameUpdater.AddListener(asteroidSpawner);
+        var spawnSystem = new SpawnSystem(_serviceLocator, asteroidPoolCreator, smallAsteroidPoolCreator, bulletPoolCreator, bounds);
+        _serviceLocator.AddService(spawnSystem);
+        _gameObserver.AddListener(spawnSystem);
         
-        _gameWindow.Init(_serviceLocator, playerMovement, playerAttack);
-        
+        var playerAttack = new PlayerAttack(_serviceLocator, bounds, _playerVehicle.FirePositions, _playerVehicle.LaserPosition, tr);
         _gameObserver.AddListener(playerAttack);
+        
+        var playerMovement = new PlayerMovement(_mainCamera, tr, _serviceLocator);
+        _serviceLocator.AddService(playerMovement);
+        _gameUpdater.AddListener(playerMovement);
         _gameObserver.AddListener(playerMovement);
+        
+        var playerLineRenderer = new LineRendererActivator(_serviceLocator, playerAttack, _playerVehicle.LineRenderer);
+        _gameUpdater.AddListener(playerLineRenderer);
         _gameObserver.AddListener(playerLineRenderer);
+
+        _gameWindow.Init(_serviceLocator, playerMovement, playerAttack);
         _gameObserver.AddListener(_gameWindow);
     }
 

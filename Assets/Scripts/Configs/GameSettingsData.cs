@@ -1,5 +1,6 @@
 using UnityEngine;
 using Interfaces;
+using UnityEngine.Serialization;
 
 namespace Configs
 {
@@ -16,8 +17,8 @@ namespace Configs
         [SerializeField] private int _coinsForAsteroid;
         [SerializeField] private int _coinsForSmallAsteroid;
         [SerializeField] private int _coinsForUFO;
-        [SerializeField] private Vector2 _asteroidTargetAngleRange;
-        [SerializeField] private LayerMask _enemyAttackMask;
+        [SerializeField] private Vector2 _asteroidAttackAngleRange;
+        [SerializeField] private Vector2 _smallAsteroidAttackAngleRange;
         [SerializeField] private LayerMask _playerAttackMask;
 
         public int PlayerVelocity => _playerVelocity;
@@ -29,7 +30,8 @@ namespace Configs
         public int CoinsForAsteroid => _coinsForAsteroid;
         public int CoinsForSmallAsteroid => _coinsForSmallAsteroid;
         public int CoinsForUFO => _coinsForUFO;
-        public Vector2 AsteroidTargetAngleRange => _asteroidTargetAngleRange;
-        public LayerMask EnemyAttackMask => _enemyAttackMask;
+        public Vector2 AsteroidAttackAngleRange => _asteroidAttackAngleRange;
+        public Vector2 SmallAsteroidAttackAngleRange => _smallAsteroidAttackAngleRange;
+        public LayerMask PlayerAttackMask => _playerAttackMask;
     }
 }
