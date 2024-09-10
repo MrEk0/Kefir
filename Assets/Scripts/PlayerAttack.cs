@@ -3,19 +3,19 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Interfaces;
 
-public class PlayerAttack : IObservable
+public class PlayerAttack : ISubscribable
 {
     private readonly InputSystem _inputSystem;
-    private readonly SpawnSystem _spawnSystem;
     private readonly Transform _playerTransform;
+    private readonly AttackerObjectPoolCreator _bulletPoolCreator;
 
     private readonly List<Transform> _firePositions = new();
 
-    public PlayerAttack(ServiceLocator serviceLocator, Bounds bounds, IEnumerable<Transform> firePositions, Transform transform)
+    public PlayerAttack(ServiceLocator serviceLocator, AttackerObjectPoolCreator bulletPoolCreator, IEnumerable<Transform> firePositions, Transform transform)
     {
-        _inputSystem = serviceLocator.GetService<InputSystem>(); 
-        _spawnSystem = serviceLocator.GetService<SpawnSystem>();
-        
+        _inputSystem = serviceLocator.GetService<InputSystem>();
+        _bulletPoolCreator = bulletPoolCreator;
+
         _playerTransform = transform;
 
         _firePositions.Clear();
@@ -34,6 +34,13 @@ public class PlayerAttack : IObservable
 
     private void OnBulletAttack(InputAction.CallbackContext value)
     {
-        _spawnSystem.SpawnPlayerProjectiles(_firePositions, _playerTransform);
+        foreach (var tr in _firePositions)
+        {
+            var bullet = _bulletPoolCreator.ObjectPool.Get();
+            
+            var bulletTr = bullet.transform;
+            bulletTr.position = tr.position;
+            bulletTr.rotation = _playerTransform.rotation;
+        }
     }
 }

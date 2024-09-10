@@ -9,7 +9,7 @@ public class AsteroidSpawner : IGameUpdatable, IServisable
     public event Action<Vector3, Quaternion> AsteroidKilledEvent = delegate { };
     
     private readonly AttackerObjectPoolCreator _asteroidPoolCreator;
-    private readonly PlayerVehicle _playerVehicle;
+    private readonly Player _player;
     
     private readonly float _pause;
     private readonly Vector2 _angleRange;
@@ -22,7 +22,7 @@ public class AsteroidSpawner : IGameUpdatable, IServisable
         _asteroidPoolCreator = asteroidPoolCreator;
         _bounds = bounds;
 
-        _playerVehicle = serviceLocator.GetService<PlayerVehicle>();
+        _player = serviceLocator.GetService<Player>();
         var data = serviceLocator.GetService<GameSettingsData>();
         
         _pause = data.AsteroidSpawnPause;
@@ -44,7 +44,7 @@ public class AsteroidSpawner : IGameUpdatable, IServisable
     {
         var position = new Vector3(Random.Range(_bounds.min.x, _bounds.max.x), _bounds.max.y, 0f);
         
-        var direction = (_playerVehicle.transform.position - position).normalized;
+        var direction = (_player.transform.position - position).normalized;
         var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
         var rotation = Quaternion.Euler(new Vector3(0f, 0f, angle * Random.Range(_angleRange.x, _angleRange.y)));
         

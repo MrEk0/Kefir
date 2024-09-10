@@ -4,7 +4,7 @@ using Interfaces;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class SmallAsteroidSpawner : IObservable
+public class SmallAsteroidSpawner : ISubscribable, IServisable
 {
     public event Action SmallAsteroidKilledEvent = delegate { };
     

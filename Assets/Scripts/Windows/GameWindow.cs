@@ -1,10 +1,9 @@
 using TMPro;
 using UnityEngine;
-using Interfaces;
 
 namespace Windows
 {
-    public class GameWindow : AWindow<GameWindowSetup>, IObservable
+    public class GameWindow : AWindow<GameWindowSetup>
     {
         private const float CIRCLE_ANGLE = 360f;
         
@@ -17,33 +16,18 @@ namespace Windows
 
         private PlayerMovement _playerMovement;
         private PlayerLaserAttack _playerAttack;
-        private SpawnSystem _spawnSystem;
+        private PointsController _pointController;
 
-        private int _currentPoints;
-        
         public override void Init(GameWindowSetup windowSetup)
         {
             _playerMovement = windowSetup.ServiceLocator.GetService<PlayerMovement>();
             _playerAttack = windowSetup.ServiceLocator.GetService<PlayerLaserAttack>();
-            _spawnSystem = windowSetup.ServiceLocator.GetService<SpawnSystem>();
+            _pointController = windowSetup.ServiceLocator.GetService<PointsController>();
 
-            _pointsText.text = _currentPoints.ToString();
-        }
-        
-        public void Subscribe()
-        {
             _playerMovement.PlayerMoveEvent += OnPlayerMoved;
             _playerAttack.LaserShotEvent += OnLaserShot;
             _playerAttack.LaserTimerEvent += OnLaserTimerUpdate;
-            _spawnSystem.ObjectKilledEvent += OnEnemyKilled;
-        }
-
-        public void Unsubscribe()
-        {
-            _playerMovement.PlayerMoveEvent -= OnPlayerMoved;
-            _playerAttack.LaserShotEvent -= OnLaserShot;
-            _playerAttack.LaserTimerEvent -= OnLaserTimerUpdate;
-            _spawnSystem.ObjectKilledEvent -= OnEnemyKilled;
+            _pointController.PointsUpdateEvent += OnPointsUpdated;
         }
         
         private void OnPlayerMoved(float angle, float velocity, Vector2 coordinates)
@@ -64,10 +48,17 @@ namespace Windows
             _laserShotsText.text = shotsCount.ToString();
         }
 
-        private void OnEnemyKilled(int points)
+        private void OnPointsUpdated(int points)
         {
-            _currentPoints += points;
-            _pointsText.text = _currentPoints.ToString();
+            _pointsText.text = points.ToString();
+        }
+
+        private void OnDestroy()
+        {
+            _playerMovement.PlayerMoveEvent -= OnPlayerMoved;
+            _playerAttack.LaserShotEvent -= OnLaserShot;
+            _playerAttack.LaserTimerEvent -= OnLaserTimerUpdate;
+            _pointController.PointsUpdateEvent -= OnPointsUpdated;
         }
     }
 }

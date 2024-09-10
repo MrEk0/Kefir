@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Interfaces;
 using UnityEngine;
 
-public class PlayerVehicle : MonoBehaviour, IDamagable, IServisable
+public class Player : MonoBehaviour, IDamagable, IServisable
 {
     public event Action DeadEvent = delegate { };
     

@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using Interfaces;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class TargetFollowerObjectPoolCreator : ObjectPoolCreator
+public class TargetFollowerObjectPoolCreator : ObjectPoolCreator, IGameFinishable
 {
     [SerializeField] private AttackerPoolItem _poolItem;
     
@@ -61,5 +62,17 @@ public class TargetFollowerObjectPoolCreator : ObjectPoolCreator
 
         if (CanRelease(pooledObject))
             ObjectPool.Release(pooledObject);
+    }
+
+    public void GameFinish()
+    {
+        var keys = _objectMovements.Keys.ToList();
+        for (var i = 0; i < keys.Count; i++)
+        {
+            _gameUpdater.RemoveListener(_objectMovements[keys[i]]);
+            Destroy(keys[i]);
+        }
+        
+        _objectMovements.Clear();
     }
 }

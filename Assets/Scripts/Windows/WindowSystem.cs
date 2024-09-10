@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using Interfaces;
 using UnityEngine;
 
 namespace Windows
 {
-    public class WindowSystem : MonoBehaviour
+    public class WindowSystem : MonoBehaviour, IServisable
     {
         [SerializeField] private Transform _windowsParent;
         [SerializeField] private ASimpleWindow[] _windowsPrefabs;
+
+        public event Action<ASimpleWindow> CloseWindowEvent = delegate { };
 
         private readonly Dictionary<Type, ASimpleWindow> _windows = new();
         private readonly Dictionary<Type, ASimpleWindow> _openedWindows = new();
@@ -41,6 +44,10 @@ namespace Windows
 
             if (!_openedWindows.TryGetValue(windowType, out var window))
                 return;
+
+            _openedWindows.Remove(windowType);
+
+            CloseWindowEvent(window);
             
             Destroy(window.gameObject);
         }

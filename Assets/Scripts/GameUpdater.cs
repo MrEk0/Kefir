@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using Interfaces;
 using UnityEngine;
 
-public class GameUpdater : MonoBehaviour, IServisable
+public class GameUpdater : MonoBehaviour, IServisable, IGameStartable, IGameFinishable
 {
     private readonly List<IGameUpdatable> _updateListeners = new();
+
+    private bool _isActive;
     
     public void AddListener(IGameUpdatable listener)
     {
@@ -21,8 +23,21 @@ public class GameUpdater : MonoBehaviour, IServisable
         _updateListeners.Clear();
     }
     
+    public void StartGame()
+    {
+        _isActive = true;
+    }
+
+    public void GameFinish()
+    {
+        _isActive = false;
+    }
+    
     private void Update()
     {
+        if (!_isActive)
+            return;
+        
         var deltaTime = Time.deltaTime;
         for (var i = 0; i < _updateListeners.Count; i++)
         {

@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Interfaces;
 
-public class InputSystem : IServisable
+public class InputSystem : IServisable, IGameStartable, IGameFinishable
 {
     [CanBeNull]
     private InputSystemActions _inputSystemActions { get; }
@@ -11,6 +11,15 @@ public class InputSystem : IServisable
     public InputSystem()
     {
         _inputSystemActions = new InputSystemActions();
-        _inputSystemActions.Player.Enable();
+    }
+
+    public void StartGame()
+    {
+        Player.Enable();
+    }
+
+    public void GameFinish()
+    {
+        Player.Disable();
     }
 }

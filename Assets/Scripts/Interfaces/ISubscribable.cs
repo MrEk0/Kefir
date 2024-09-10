@@ -1,6 +1,6 @@
 namespace Interfaces
 {
-    public interface IObservable
+    public interface ISubscribable
     {
         public void Subscribe();
         public void Unsubscribe();

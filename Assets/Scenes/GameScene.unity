@@ -348,7 +348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameInstaller: {fileID: 1050465127}
-  _playerVehicle: {fileID: 1047637693}
+  _player: {fileID: 1047637693}
   _windowSystem: {fileID: 244362296}
 --- !u!4 &782786592
 Transform:
@@ -499,13 +499,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameUpdater: {fileID: 1050465129}
-  _playerVehicle: {fileID: 1047637693}
+  _player: {fileID: 1047637693}
   _mainCamera: {fileID: 963194227}
   _gameSettingsData: {fileID: 11400000, guid: b594de69d401d5841b4dfcd6d247c6a5, type: 2}
-  _bulletPoolCreator: {fileID: 0}
-  _asteroidPoolCreator: {fileID: 0}
-  _smallAsteroidPoolCreator: {fileID: 0}
-  _ufoPoolCreator: {fileID: 0}
+  _bulletPoolCreator: {fileID: 238743507}
+  _asteroidPoolCreator: {fileID: 1470909373}
+  _smallAsteroidPoolCreator: {fileID: 1209148553}
+  _ufoPoolCreator: {fileID: 1069736827}
 --- !u!4 &1050465128
 Transform:
   m_ObjectHideFlags: 0

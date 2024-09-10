@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Interfaces;
 
-public class PlayerLaserAttack : IObservable, ILaserAttackable, IGameUpdatable, IServisable
+public class PlayerLaserAttack : ISubscribable, ILaserAttackable, IGameUpdatable, IServisable
 {
     public event Action<Vector3, Vector3> LaserFireEvent = delegate { };
     public event Action<float> LaserTimerEvent = delegate { };

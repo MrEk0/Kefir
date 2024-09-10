@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using Interfaces;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class AttackerObjectPoolCreator : ObjectPoolCreator
+public class AttackerObjectPoolCreator : ObjectPoolCreator, IGameFinishable
 {
     [SerializeField] private AttackerPoolItem _poolItem;
     
@@ -19,7 +20,7 @@ public class AttackerObjectPoolCreator : ObjectPoolCreator
         
         ObjectPool = new ObjectPool<ObjectPoolItem>(CreateProjectile, OnGetFromPool, OnReleaseToPool, OnDestroyPooledObject);
     }
-    
+
     protected override ObjectPoolItem CreateProjectile()
     {
         var spawnerItem = Instantiate(_poolItem, transform);
@@ -59,5 +60,17 @@ public class AttackerObjectPoolCreator : ObjectPoolCreator
 
         if (CanRelease(pooledObject))
             ObjectPool.Release(pooledObject);
+    }
+    
+    public void GameFinish()
+    {
+        var keys = _objectMovements.Keys.ToList();
+        for (var i = 0; i < keys.Count; i++)
+        {
+            _gameUpdater.RemoveListener(_objectMovements[keys[i]]);
+            Destroy(keys[i]);
+        }
+        
+        _objectMovements.Clear();
     }
 }

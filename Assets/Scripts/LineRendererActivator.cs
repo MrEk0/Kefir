@@ -2,7 +2,7 @@ using Configs;
 using UnityEngine;
 using Interfaces;
 
-public class LineRendererActivator : IObservable, IGameUpdatable
+public class LineRendererActivator : ISubscribable, IGameUpdatable
 {
     private readonly LineRenderer _lineRenderer;
     private readonly ILaserAttackable _attacker;

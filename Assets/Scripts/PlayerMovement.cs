@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Interfaces;
 
-public class PlayerMovement : IGameUpdatable, IServisable, IObservable
+public class PlayerMovement : IGameUpdatable, IServisable, ISubscribable, IGameStartable
 {
     public event Action<float, float, Vector2> PlayerMoveEvent = delegate { };
 
@@ -76,5 +76,11 @@ public class PlayerMovement : IGameUpdatable, IServisable, IObservable
 
         _rawInputMovement = inputMovement.y < 0 ? Vector3.zero : new Vector3(0, inputMovement.y, 0);
         _rawInputRotation = new Vector3(0, 0, inputMovement.x);
+    }
+
+    public void StartGame()
+    {
+        _transform.position = Vector3.zero;
+        _transform.rotation = Quaternion.identity;
     }
 }
