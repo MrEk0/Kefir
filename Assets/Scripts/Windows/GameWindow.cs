@@ -1,3 +1,6 @@
+using Game;
+using JetBrains.Annotations;
+using Player;
 using TMPro;
 using UnityEngine;
 
@@ -14,15 +17,18 @@ namespace Windows
         [SerializeField] private TMP_Text _laserShotsText;
         [SerializeField] private TMP_Text _laserTimerText;
 
-        private PlayerMovement _playerMovement;
-        private PlayerLaserAttack _playerAttack;
-        private PointsController _pointController;
+        [CanBeNull] private PlayerMovement _playerMovement;
+        [CanBeNull] private PlayerLaserAttack _playerAttack;
+        [CanBeNull] private PointsController _pointController;
 
         public override void Init(GameWindowSetup windowSetup)
         {
             _playerMovement = windowSetup.ServiceLocator.GetService<PlayerMovement>();
             _playerAttack = windowSetup.ServiceLocator.GetService<PlayerLaserAttack>();
             _pointController = windowSetup.ServiceLocator.GetService<PointsController>();
+
+            if (_playerAttack == null || _playerMovement == null || _pointController == null)
+                return;
 
             _playerMovement.PlayerMoveEvent += OnPlayerMoved;
             _playerAttack.LaserShotEvent += OnLaserShot;
@@ -55,6 +61,9 @@ namespace Windows
 
         private void OnDestroy()
         {
+            if (_playerAttack == null || _playerMovement == null || _pointController == null)
+                return;
+            
             _playerMovement.PlayerMoveEvent -= OnPlayerMoved;
             _playerAttack.LaserShotEvent -= OnLaserShot;
             _playerAttack.LaserTimerEvent -= OnLaserTimerUpdate;

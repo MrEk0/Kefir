@@ -10,8 +10,7 @@ namespace Windows
         [SerializeField] private TMP_Text _scoreText;
         [SerializeField] private Button _replayButton;
 
-        [CanBeNull]
-        private WindowSystem _windowSystem;
+        [CanBeNull] private WindowSystem _windowSystem;
 
         private void OnEnable()
         {
@@ -34,7 +33,6 @@ namespace Windows
             if (_windowSystem == null)
                 return;
             
-            //todo replay event
             _windowSystem.Close<GameOverWindow>();
         }
     }

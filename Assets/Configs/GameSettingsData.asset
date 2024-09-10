@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a43f9d872027b4419ef6c2f88925bac, type: 3}
   m_Name: GameSettingsData
   m_EditorClassIdentifier: 
-  _playerVelocity: 5
+  _playerMaxVelocity: 5
+  _playerVelocityTimeRate: 10
   _playerAngleVelocity: 5
   _maxLaserShotCount: 2
   _laserDuration: 0.1
@@ -23,6 +24,7 @@ MonoBehaviour:
   _coinsForAsteroid: 2
   _coinsForSmallAsteroid: 5
   _coinsForUFO: 10
+  _enemyExtraBoundsMultiplayer: 1.5
   _asteroidAttackAngleRange: {x: 0.9, y: 1.1}
   _smallAsteroidAttackAngleRange: {x: 0.6, y: 1.4}
   _playerAttackMask:
