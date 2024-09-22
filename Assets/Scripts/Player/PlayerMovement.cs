@@ -9,7 +9,7 @@ using InputSystem = Game.InputSystem;
 
 namespace Player
 {
-    public class PlayerMovement : IGameUpdatable, IServisable, ISubscribable, IGameStartable
+    public class PlayerMovement : IGameUpdatable, IServisable, ISubscribable, IGameStartListener
     {
         public event Action<float, float, Vector2> PlayerMoveEvent = delegate { };
 

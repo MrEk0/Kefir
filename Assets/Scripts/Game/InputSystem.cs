@@ -3,7 +3,7 @@ using Interfaces;
 
 namespace Game
 {
-    public class InputSystem : IServisable, IGameStartable, IGameFinishable
+    public class InputSystem : IServisable, IGameStartListener, IGameFinishListener
     {
         [CanBeNull] private InputSystemActions _inputSystemActions { get; }
 

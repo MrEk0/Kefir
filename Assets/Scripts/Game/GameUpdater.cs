@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class GameUpdater : MonoBehaviour, IServisable, IGameStartable, IGameFinishable
+    public class GameUpdater : MonoBehaviour, IServisable, IGameStartListener, IGameFinishListener
     {
         private readonly List<IGameUpdatable> _updateListeners = new();
 

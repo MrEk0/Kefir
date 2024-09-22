@@ -13,15 +13,15 @@ namespace Player
     {
         [CanBeNull] private readonly InputSystem _inputSystem;
         [CanBeNull] private readonly Transform _playerTransform;
-        [CanBeNull] private readonly AttackerObjectPoolCreator _bulletPoolCreator;
+        [CanBeNull] private readonly AttackerObjectPoolFactory _bulletPoolFactory;
 
         private readonly List<Transform> _firePositions = new();
 
-        public PlayerAttack(ServiceLocator serviceLocator, AttackerObjectPoolCreator bulletPoolCreator,
+        public PlayerAttack(ServiceLocator serviceLocator, AttackerObjectPoolFactory bulletPoolFactory,
             IEnumerable<Transform> firePositions, Transform transform)
         {
             _inputSystem = serviceLocator.GetService<InputSystem>();
-            _bulletPoolCreator = bulletPoolCreator;
+            _bulletPoolFactory = bulletPoolFactory;
 
             _playerTransform = transform;
 
@@ -47,12 +47,12 @@ namespace Player
 
         private void OnBulletAttack(InputAction.CallbackContext value)
         {
-            if (_bulletPoolCreator == null || _playerTransform == null)
+            if (_bulletPoolFactory == null || _playerTransform == null)
                 return;
 
             foreach (var tr in _firePositions)
             {
-                var bullet = _bulletPoolCreator.ObjectPool.Get();
+                var bullet = _bulletPoolFactory.ObjectPool.Get();
 
                 var bulletTr = bullet.transform;
                 bulletTr.position = tr.position;

@@ -9,36 +9,34 @@ using UnityEngine.Pool;
 
 namespace Pools
 {
-    public class TargetFollowerObjectPoolCreator : ObjectPoolCreator, IGameFinishable
+    public class DamageReceiverFactory : ObjectPoolFactory, IGameFinishListener
     {
-        [SerializeField] private AttackerPoolItem _poolItem;
+        [SerializeField] private DamageReceiverPoolItem _poolItem;
 
         [CanBeNull] private GameUpdater _gameUpdater;
-        [CanBeNull] private Transform _target;
         private Bounds _bounds;
 
-        private readonly Dictionary<GameObject, ObjectTargetFollowerMovement> _objectMovements = new();
+        private readonly Dictionary<GameObject, ObjectMovement> _objectMovements = new();
+        
+        public IObjectPool<DamageReceiverPoolItem> ObjectPool { get; private set; }
 
-        public void Init(Bounds bounds, Transform target, ServiceLocator serviceLocator)
+        public void Init(Bounds bounds, ServiceLocator serviceLocator)
         {
             _bounds = bounds;
-            _target = target;
             _gameUpdater = serviceLocator.GetService<GameUpdater>();
 
-            ObjectPool = new ObjectPool<ObjectPoolItem>(CreateProjectile, OnGetFromPool, OnReleaseToPool,
-                OnDestroyPooledObject);
+            ObjectPool = new ObjectPool<DamageReceiverPoolItem>(CreateProjectile, OnGetFromPool, OnReleaseToPool, OnDestroyPooledObject);
         }
 
-        protected override ObjectPoolItem CreateProjectile()
+        private DamageReceiverPoolItem CreateProjectile()
         {
             var spawnerItem = Instantiate(_poolItem, transform);
 
-            var movement = new ObjectTargetFollowerMovement(spawnerItem.transform, _target, _bounds, _poolItem.Velocity,
-                () =>
-                {
-                    if (CanRelease(spawnerItem))
-                        ObjectPool.Release(spawnerItem);
-                });
+            var movement = new ObjectMovement(spawnerItem.transform, _bounds, _poolItem.Velocity, () =>
+            {
+                if (CanRelease(spawnerItem))
+                    ObjectPool.Release(spawnerItem);
+            });
 
             if (_gameUpdater == null)
                 return spawnerItem;
@@ -51,7 +49,7 @@ namespace Pools
             return spawnerItem;
         }
 
-        protected override void OnDestroyPooledObject(ObjectPoolItem pooledObject)
+        private void OnDestroyPooledObject(DamageReceiverPoolItem pooledObject)
         {
             if (_gameUpdater == null)
                 return;
@@ -61,14 +59,13 @@ namespace Pools
                 _gameUpdater.RemoveListener(movement);
                 _objectMovements.Remove(pooledObject.gameObject);
             }
-
-            if (pooledObject is AttackerPoolItem item)
-                item.CollisionEvent -= OnCollision;
+            
+            pooledObject.CollisionEvent -= OnCollision;
 
             Destroy(pooledObject.gameObject);
         }
 
-        private void OnCollision(Collider2D other, AttackerPoolItem pooledObject)
+        private void OnCollision(Collider2D other, DamageReceiverPoolItem pooledObject)
         {
             var target = other.transform.GetComponent<IDamagable>();
             target?.TakeDamage();

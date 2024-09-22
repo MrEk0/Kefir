@@ -13,17 +13,17 @@ namespace Spawners
     {
         public event Action UFOKilledEvent = delegate { };
 
-        [CanBeNull] private readonly TargetFollowerObjectPoolCreator _objectPoolCreator;
+        [CanBeNull] private readonly TargetFollowerObjectFactory _objectFactory;
 
         private readonly float _pause;
 
         private float _timer;
         private Bounds _bounds;
 
-        public UFOSpawner(ServiceLocator serviceLocator, TargetFollowerObjectPoolCreator objectPoolCreator,
+        public UFOSpawner(ServiceLocator serviceLocator, TargetFollowerObjectFactory objectFactory,
             Bounds bounds)
         {
-            _objectPoolCreator = objectPoolCreator;
+            _objectFactory = objectFactory;
             _bounds = bounds;
 
             var data = serviceLocator.GetService<GameSettingsData>();
@@ -44,26 +44,23 @@ namespace Spawners
 
         private void SpawnNewUFO()
         {
-            if (_objectPoolCreator == null)
+            if (_objectFactory == null)
                 return;
 
             var position = new Vector3(Random.Range(_bounds.min.x, _bounds.max.x), _bounds.max.y, 0f);
 
-            var newPoolItem = _objectPoolCreator.ObjectPool.Get();
+            var newPoolItem = _objectFactory.ObjectPool.Get();
             var tr = newPoolItem.transform;
             tr.position = position;
             tr.rotation = Quaternion.identity;
-
-            if (newPoolItem is DamageReceiverPoolItem item)
+            
+            newPoolItem.Init(poolItem =>
             {
-                item.Init(poolItem =>
-                {
-                    UFOKilledEvent();
+                UFOKilledEvent();
 
-                    if (_objectPoolCreator.CanRelease(poolItem))
-                        _objectPoolCreator.ObjectPool.Release(poolItem);
-                });
-            }
+                if (ObjectPoolFactory.CanRelease(poolItem))
+                    _objectFactory.ObjectPool.Release(poolItem);
+            });
         }
     }
 }

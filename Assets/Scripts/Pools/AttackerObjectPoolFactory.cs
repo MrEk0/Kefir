@@ -9,7 +9,7 @@ using UnityEngine.Pool;
 
 namespace Pools
 {
-    public class AttackerObjectPoolCreator : ObjectPoolCreator, IGameFinishable
+    public class AttackerObjectPoolFactory : ObjectPoolFactory, IGameFinishListener
     {
         [SerializeField] private AttackerPoolItem _poolItem;
 
@@ -17,17 +17,18 @@ namespace Pools
         private Bounds _bounds;
 
         private readonly Dictionary<GameObject, ObjectMovement> _objectMovements = new();
+        
+        public IObjectPool<AttackerPoolItem> ObjectPool { get; private set; } 
 
         public void Init(Bounds bounds, ServiceLocator serviceLocator)
         {
             _bounds = bounds;
             _gameUpdater = serviceLocator.GetService<GameUpdater>();
 
-            ObjectPool = new ObjectPool<ObjectPoolItem>(CreateProjectile, OnGetFromPool, OnReleaseToPool,
-                OnDestroyPooledObject);
+            ObjectPool = new ObjectPool<AttackerPoolItem>(CreateProjectile, OnGetFromPool, OnReleaseToPool, OnDestroyPooledObject);
         }
 
-        protected override ObjectPoolItem CreateProjectile()
+        private AttackerPoolItem CreateProjectile()
         {
             var spawnerItem = Instantiate(_poolItem, transform);
 
@@ -48,7 +49,7 @@ namespace Pools
             return spawnerItem;
         }
 
-        protected override void OnDestroyPooledObject(ObjectPoolItem pooledObject)
+        private void OnDestroyPooledObject(AttackerPoolItem pooledObject)
         {
             if (_gameUpdater == null)
                 return;
@@ -58,9 +59,8 @@ namespace Pools
                 _gameUpdater.RemoveListener(movement);
                 _objectMovements.Remove(pooledObject.gameObject);
             }
-
-            if (pooledObject is AttackerPoolItem item)
-                item.CollisionEvent -= OnCollision;
+            
+            pooledObject.CollisionEvent -= OnCollision;
 
             Destroy(pooledObject.gameObject);
         }

@@ -502,10 +502,10 @@ MonoBehaviour:
   _player: {fileID: 1047637693}
   _mainCamera: {fileID: 963194227}
   _gameSettingsData: {fileID: 11400000, guid: b594de69d401d5841b4dfcd6d247c6a5, type: 2}
-  _bulletPoolCreator: {fileID: 238743507}
-  _asteroidPoolCreator: {fileID: 1470909373}
-  _smallAsteroidPoolCreator: {fileID: 1209148553}
-  _ufoPoolCreator: {fileID: 1069736827}
+  bulletPoolFactory: {fileID: 238743507}
+  asteroidFactory: {fileID: 1470909373}
+  smallAsteroidFactory: {fileID: 1209148553}
+  ufoFactory: {fileID: 1069736827}
 --- !u!4 &1050465128
 Transform:
   m_ObjectHideFlags: 0
@@ -697,7 +697,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1209148551}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 681672f14525b034a836b9d91557747b, type: 3}
+  m_Script: {fileID: 11500000, guid: 3dd48f0a2cd5c354bbe6eaecf3fa1567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _poolItem: {fileID: 1387150108334886056, guid: 2f3a187b8daf24a4cb3bf262390393ea, type: 3}
@@ -742,7 +742,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1470909371}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 681672f14525b034a836b9d91557747b, type: 3}
+  m_Script: {fileID: 11500000, guid: 3dd48f0a2cd5c354bbe6eaecf3fa1567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _poolItem: {fileID: 7728087772715251485, guid: 72c9c6c5cee460b44988b0a40ed6580e, type: 3}

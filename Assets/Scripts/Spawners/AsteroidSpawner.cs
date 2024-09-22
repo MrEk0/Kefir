@@ -14,7 +14,7 @@ namespace Spawners
     {
         public event Action<Vector3, Quaternion> AsteroidKilledEvent = delegate { };
 
-        [CanBeNull] private readonly AttackerObjectPoolCreator _asteroidPoolCreator;
+        [CanBeNull] private readonly DamageReceiverFactory _asteroidFactory;
         [CanBeNull] private readonly PlayerVehicle _player;
 
         private readonly float _pause;
@@ -23,10 +23,10 @@ namespace Spawners
         private float _timer;
         private Bounds _bounds;
 
-        public AsteroidSpawner(ServiceLocator serviceLocator, AttackerObjectPoolCreator asteroidPoolCreator,
+        public AsteroidSpawner(ServiceLocator serviceLocator, DamageReceiverFactory asteroidFactory,
             Bounds bounds)
         {
-            _asteroidPoolCreator = asteroidPoolCreator;
+            _asteroidFactory = asteroidFactory;
             _bounds = bounds;
 
             _player = serviceLocator.GetService<PlayerVehicle>();
@@ -49,7 +49,7 @@ namespace Spawners
 
         private void SpawnNewAsteroid()
         {
-            if (_player == null || _asteroidPoolCreator == null)
+            if (_player == null || _asteroidFactory == null)
                 return;
 
             var position = new Vector3(Random.Range(_bounds.min.x, _bounds.max.x), _bounds.max.y, 0f);
@@ -58,23 +58,20 @@ namespace Spawners
             var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
             var rotation = Quaternion.Euler(new Vector3(0f, 0f, angle * Random.Range(_angleRange.x, _angleRange.y)));
 
-            var newAsteroid = _asteroidPoolCreator.ObjectPool.Get();
+            var newAsteroid = _asteroidFactory.ObjectPool.Get();
             var tr = newAsteroid.transform;
             tr.position = position;
             tr.rotation = rotation;
-
-            if (newAsteroid is DamageReceiverPoolItem item)
+            
+            newAsteroid.Init(poolItem =>
             {
-                item.Init(poolItem =>
-                {
-                    var poolItemTransform = poolItem.transform;
+                var poolItemTransform = poolItem.transform;
 
-                    AsteroidKilledEvent(poolItemTransform.position, poolItemTransform.rotation);
+                AsteroidKilledEvent(poolItemTransform.position, poolItemTransform.rotation);
 
-                    if (_asteroidPoolCreator.CanRelease(poolItem))
-                        _asteroidPoolCreator.ObjectPool.Release(poolItem);
-                });
-            }
+                if (ObjectPoolFactory.CanRelease(poolItem))
+                    _asteroidFactory.ObjectPool.Release(poolItem);
+            });
         }
     }
 }

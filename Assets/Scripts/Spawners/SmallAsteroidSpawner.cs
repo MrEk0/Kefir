@@ -13,15 +13,15 @@ namespace Spawners
     {
         public event Action SmallAsteroidKilledEvent = delegate { };
 
-        [CanBeNull] private readonly AttackerObjectPoolCreator _objectPoolCreator;
+        [CanBeNull] private readonly DamageReceiverFactory _objectFactory;
         [CanBeNull] private readonly AsteroidSpawner _asteroidSpawner;
 
         private readonly Vector2 _angleRange;
         private readonly int _extraAsteroidCounts;
 
-        public SmallAsteroidSpawner(ServiceLocator serviceLocator, AttackerObjectPoolCreator objectPoolCreator)
+        public SmallAsteroidSpawner(ServiceLocator serviceLocator, DamageReceiverFactory objectFactory)
         {
-            _objectPoolCreator = objectPoolCreator;
+            _objectFactory = objectFactory;
 
             _asteroidSpawner = serviceLocator.GetService<AsteroidSpawner>();
             var data = serviceLocator.GetService<GameSettingsData>();
@@ -48,7 +48,7 @@ namespace Spawners
 
         private void SpawnAsteroid(Vector3 position, Quaternion rotation)
         {
-            if (_objectPoolCreator == null)
+            if (_objectFactory == null)
                 return;
 
             for (var i = 0; i < _extraAsteroidCounts; i++)
@@ -56,21 +56,18 @@ namespace Spawners
                 var newRotation = Quaternion.Euler(new Vector3(0f, 0f,
                     rotation.eulerAngles.z * Random.Range(_angleRange.x, _angleRange.y)));
 
-                var newAsteroid = _objectPoolCreator.ObjectPool.Get();
+                var newAsteroid = _objectFactory.ObjectPool.Get();
                 var tr = newAsteroid.transform;
                 tr.position = position;
                 tr.rotation = newRotation;
-
-                if (newAsteroid is DamageReceiverPoolItem item)
+                
+                newAsteroid.Init(poolItem =>
                 {
-                    item.Init(poolItem =>
-                    {
-                        SmallAsteroidKilledEvent();
+                    SmallAsteroidKilledEvent();
 
-                        if (_objectPoolCreator.CanRelease(poolItem))
-                            _objectPoolCreator.ObjectPool.Release(poolItem);
-                    });
-                }
+                    if (ObjectPoolFactory.CanRelease(poolItem))
+                        _objectFactory.ObjectPool.Release(poolItem);
+                });
             }
         }
     }

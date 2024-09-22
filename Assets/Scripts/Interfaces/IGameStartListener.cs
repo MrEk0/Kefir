@@ -1,6 +1,6 @@
 namespace Interfaces
 {
-    public interface IGameStartable
+    public interface IGameStartListener
     {
         public void StartGame();
     }

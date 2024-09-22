@@ -21,9 +21,9 @@ namespace Game
         {
             foreach (var listener in _listeners)
             {
-                if (listener is IGameStartable gameStartable)
+                if (listener is IGameStartListener gameStartListener)
                 {
-                    gameStartable.StartGame();
+                    gameStartListener.StartGame();
                 }
             }
         }
@@ -32,9 +32,9 @@ namespace Game
         {
             foreach (var listener in _listeners)
             {
-                if (listener is IGameFinishable gameFinishable)
+                if (listener is IGameFinishListener gameFinishListener)
                 {
-                    gameFinishable.GameFinish();
+                    gameFinishListener.GameFinish();
                 }
             }
         }

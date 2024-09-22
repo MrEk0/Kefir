@@ -1,6 +1,6 @@
 namespace Interfaces
 {
-    public interface IGameFinishable
+    public interface IGameFinishListener
     {
         public void GameFinish();
     }

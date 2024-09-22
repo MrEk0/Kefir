@@ -9,6 +9,7 @@ namespace Pools
         [SerializeField] private int _velocity;
         [SerializeField] private LayerMask _attackMask;
 
+        protected LayerMask AttackMask => _attackMask;
         public int Velocity => _velocity;
 
         public event Action<Collider2D, AttackerPoolItem> CollisionEvent = delegate { };
