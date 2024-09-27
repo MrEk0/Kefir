@@ -56,7 +56,7 @@ namespace Player
                 return;
 
             _inputSystem.Player.Move.started -= OnMoveStarted;
-            _inputSystem.Player.Move.canceled += OnMoveCanceled;
+            _inputSystem.Player.Move.canceled -= OnMoveCanceled;
         }
 
         public void OnUpdate(float deltaTime)
