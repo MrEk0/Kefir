@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class PointsController : IServisable, ISubscribable
+    public class PointsController : IServisable, IDisposable
     {
         public event Action<int> PointsUpdateEvent = delegate { };
 
@@ -32,10 +32,7 @@ namespace Game
             _asteroidCoins = data.CoinsForAsteroid;
             _smallAsteroidCoins = data.CoinsForSmallAsteroid;
             _ufoCoins = data.CoinsForUFO;
-        }
-
-        public void Subscribe()
-        {
+        
             if (_asteroidSpawner == null || _smallAsteroidSpawner == null || _ufoSpawner == null)
                 return;
 
@@ -44,7 +41,7 @@ namespace Game
             _ufoSpawner.UFOKilledEvent += OnUFOKilled;
         }
 
-        public void Unsubscribe()
+        public void Dispose()
         {
             if (_asteroidSpawner == null || _smallAsteroidSpawner == null || _ufoSpawner == null)
                 return;

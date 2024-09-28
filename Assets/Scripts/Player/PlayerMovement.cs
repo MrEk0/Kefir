@@ -9,7 +9,7 @@ using InputSystem = Game.InputSystem;
 
 namespace Player
 {
-    public class PlayerMovement : IGameUpdatable, IServisable, ISubscribable, IGameStartListener
+    public class PlayerMovement : IGameUpdatable, IServisable, IDisposable, IGameStartListener
     {
         public event Action<float, float, Vector2> PlayerMoveEvent = delegate { };
 
@@ -39,10 +39,7 @@ namespace Player
             _maxVelocity = data.PlayerMaxVelocity;
             _velocityTimeRate = data.PlayerVelocityTimeRate;
             _angleVelocity = data.PlayerAngleVelocity;
-        }
-
-        public void Subscribe()
-        {
+        
             if (_inputSystem == null)
                 return;
 
@@ -50,7 +47,7 @@ namespace Player
             _inputSystem.Player.Move.canceled += OnMoveCanceled;
         }
 
-        public void Unsubscribe()
+        public void Dispose()
         {
             if (_inputSystem == null)
                 return;

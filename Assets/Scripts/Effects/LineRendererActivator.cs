@@ -1,3 +1,4 @@
+using System;
 using Configs;
 using Game;
 using UnityEngine;
@@ -6,17 +7,17 @@ using JetBrains.Annotations;
 
 namespace Effects
 {
-    public class LineRendererActivator : ISubscribable, IGameUpdatable
+    public class LineRendererActivator : IDisposable, IGameUpdatable
     {
         [CanBeNull] private readonly LineRenderer _lineRenderer;
         [CanBeNull] private readonly ILaserAttackable _attacker;
+        
         private readonly float _duration;
 
         private float _timer;
         private bool _isActive;
 
-        public LineRendererActivator(ServiceLocator serviceLocator, ILaserAttackable attacker,
-            LineRenderer lineRenderer)
+        public LineRendererActivator(ServiceLocator serviceLocator, ILaserAttackable attacker, LineRenderer lineRenderer)
         {
             _lineRenderer = lineRenderer;
             _attacker = attacker;
@@ -26,17 +27,14 @@ namespace Effects
 
             if (_lineRenderer != null)
                 _lineRenderer.enabled = _isActive;
-        }
-
-        public void Subscribe()
-        {
+        
             if (_attacker == null)
                 return;
 
             _attacker.LaserFireEvent += OnLaserAttack;
         }
 
-        public void Unsubscribe()
+        public void Dispose()
         {
             if (_attacker == null)
                 return;

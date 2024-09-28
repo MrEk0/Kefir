@@ -1,15 +1,15 @@
+using System;
 using System.Collections.Generic;
 using Game;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Interfaces;
 using JetBrains.Annotations;
 using Pools;
 using InputSystem = Game.InputSystem;
 
 namespace Player
 {
-    public class PlayerAttack : ISubscribable
+    public class PlayerAttack : IDisposable
     {
         [CanBeNull] private readonly InputSystem _inputSystem;
         [CanBeNull] private readonly Transform _playerTransform;
@@ -17,8 +17,7 @@ namespace Player
 
         private readonly List<Transform> _firePositions = new();
 
-        public PlayerAttack(ServiceLocator serviceLocator, AttackerObjectPoolFactory bulletPoolFactory,
-            IEnumerable<Transform> firePositions, Transform transform)
+        public PlayerAttack(ServiceLocator serviceLocator, AttackerObjectPoolFactory bulletPoolFactory, IEnumerable<Transform> firePositions, Transform transform)
         {
             _inputSystem = serviceLocator.GetService<InputSystem>();
             _bulletPoolFactory = bulletPoolFactory;
@@ -27,17 +26,14 @@ namespace Player
 
             _firePositions.Clear();
             _firePositions.AddRange(firePositions);
-        }
 
-        public void Subscribe()
-        {
             if (_inputSystem == null)
                 return;
 
             _inputSystem.Player.BulletFire.performed += OnBulletAttack;
         }
 
-        public void Unsubscribe()
+        public void Dispose()
         {
             if (_inputSystem == null)
                 return;

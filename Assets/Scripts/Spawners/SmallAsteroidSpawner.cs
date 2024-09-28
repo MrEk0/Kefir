@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace Spawners
 {
-    public class SmallAsteroidSpawner : ISubscribable, IServisable
+    public class SmallAsteroidSpawner : IDisposable, IServisable
     {
         public event Action SmallAsteroidKilledEvent = delegate { };
 
@@ -28,17 +28,14 @@ namespace Spawners
 
             _angleRange = data.SmallAsteroidAttackAngleRange;
             _extraAsteroidCounts = data.AsteroidOnBulletHitCount;
-        }
-
-        public void Subscribe()
-        {
+        
             if (_asteroidSpawner == null)
                 return;
 
             _asteroidSpawner.AsteroidKilledEvent += SpawnAsteroid;
         }
 
-        public void Unsubscribe()
+        public void Dispose()
         {
             if (_asteroidSpawner == null)
                 return;
