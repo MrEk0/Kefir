@@ -3,7 +3,6 @@ using System.Linq;
 using Common;
 using Game;
 using Interfaces;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -13,7 +12,7 @@ namespace Pools
     {
         [SerializeField] private DamageReceiverPoolItem _poolItem;
 
-        [CanBeNull] private GameUpdater _gameUpdater;
+        private GameUpdater _gameUpdater;
         private Bounds _bounds;
 
         private readonly Dictionary<GameObject, ObjectMovement> _objectMovements = new();
@@ -38,9 +37,6 @@ namespace Pools
                     ObjectPool.Release(spawnerItem);
             });
 
-            if (_gameUpdater == null)
-                return spawnerItem;
-
             _objectMovements.Add(spawnerItem.gameObject, movement);
             _gameUpdater.AddListener(movement);
 
@@ -51,9 +47,6 @@ namespace Pools
 
         private void OnDestroyPooledObject(DamageReceiverPoolItem pooledObject)
         {
-            if (_gameUpdater == null)
-                return;
-
             if (_objectMovements.TryGetValue(pooledObject.gameObject, out var movement))
             {
                 _gameUpdater.RemoveListener(movement);
@@ -76,9 +69,6 @@ namespace Pools
 
         public void GameFinish()
         {
-            if (_gameUpdater == null)
-                return;
-
             var keys = _objectMovements.Keys.ToList();
             for (var i = 0; i < keys.Count; i++)
             {

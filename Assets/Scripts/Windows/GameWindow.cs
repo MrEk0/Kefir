@@ -1,12 +1,12 @@
+using System;
 using Game;
-using JetBrains.Annotations;
 using Player;
 using TMPro;
 using UnityEngine;
 
 namespace Windows
 {
-    public class GameWindow : AWindow<GameWindowSetup>
+    public class GameWindow : AWindow<GameWindowSetup>, IDisposable
     {
         private const float CIRCLE_ANGLE = 360f;
         
@@ -17,9 +17,9 @@ namespace Windows
         [SerializeField] private TMP_Text _laserShotsText;
         [SerializeField] private TMP_Text _laserTimerText;
 
-        [CanBeNull] private PlayerMovement _playerMovement;
-        [CanBeNull] private PlayerLaserAttack _playerAttack;
-        [CanBeNull] private PointsController _pointController;
+        private PlayerMovement _playerMovement;
+        private PlayerLaserAttack _playerAttack;
+        private PointsController _pointController;
 
         public override void Init(GameWindowSetup windowSetup)
         {
@@ -27,13 +27,18 @@ namespace Windows
             _playerAttack = windowSetup.ServiceLocator.GetService<PlayerLaserAttack>();
             _pointController = windowSetup.ServiceLocator.GetService<PointsController>();
 
-            if (_playerAttack == null || _playerMovement == null || _pointController == null)
-                return;
-
             _playerMovement.PlayerMoveEvent += OnPlayerMoved;
             _playerAttack.LaserShotEvent += OnLaserShot;
             _playerAttack.LaserTimerEvent += OnLaserTimerUpdate;
             _pointController.PointsUpdateEvent += OnPointsUpdated;
+        }
+        
+        public void Dispose()
+        {
+            _playerMovement.PlayerMoveEvent -= OnPlayerMoved;
+            _playerAttack.LaserShotEvent -= OnLaserShot;
+            _playerAttack.LaserTimerEvent -= OnLaserTimerUpdate;
+            _pointController.PointsUpdateEvent -= OnPointsUpdated;
         }
         
         private void OnPlayerMoved(float angle, float velocity, Vector2 coordinates)
@@ -57,17 +62,6 @@ namespace Windows
         private void OnPointsUpdated(int points)
         {
             _pointsText.text = points.ToString();
-        }
-
-        private void OnDestroy()
-        {
-            if (_playerAttack == null || _playerMovement == null || _pointController == null)
-                return;
-            
-            _playerMovement.PlayerMoveEvent -= OnPlayerMoved;
-            _playerAttack.LaserShotEvent -= OnLaserShot;
-            _playerAttack.LaserTimerEvent -= OnLaserTimerUpdate;
-            _pointController.PointsUpdateEvent -= OnPointsUpdated;
         }
     }
 }

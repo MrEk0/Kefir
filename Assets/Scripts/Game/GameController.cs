@@ -31,9 +31,6 @@ namespace Game
         {
             _gameInstaller.InstallBindings();
 
-            if (_gameInstaller.ServiceLocator == null)
-                return;
-
             _gameInstaller.ServiceLocator.GetService<GameListener>().StartGame();
 
             var windowSetup = new GameWindowSetup
@@ -57,9 +54,6 @@ namespace Game
 
         private void OnPlayerDead()
         {
-            if (_gameInstaller.ServiceLocator == null)
-                return;
-
             var pointsController = _gameInstaller.ServiceLocator.GetService<PointsController>();
             _gameInstaller.ServiceLocator.GetService<GameListener>().FinishGame();
 

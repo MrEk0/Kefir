@@ -1,6 +1,5 @@
 using Configs;
 using Effects;
-using JetBrains.Annotations;
 using Player;
 using Pools;
 using Spawners;
@@ -14,22 +13,19 @@ namespace Game
         [SerializeField] private PlayerVehicle _player;
         [SerializeField] private Camera _mainCamera;
         [SerializeField] private GameSettingsData _gameSettingsData;
-        [SerializeField] private AttackerObjectPoolFactory bulletPoolFactory;
-        [SerializeField] private DamageReceiverFactory asteroidFactory;
-        [SerializeField] private DamageReceiverFactory smallAsteroidFactory;
-        [SerializeField] private TargetFollowerObjectFactory ufoFactory;
+        [SerializeField] private AttackerObjectPoolFactory _bulletPoolFactory;
+        [SerializeField] private DamageReceiverFactory _asteroidFactory;
+        [SerializeField] private DamageReceiverFactory _smallAsteroidFactory;
+        [SerializeField] private TargetFollowerObjectFactory _ufoFactory;
 
-        [CanBeNull] public ServiceLocator ServiceLocator { get; private set; }
+        public ServiceLocator ServiceLocator { get; private set; }
 
         public void InstallBindings()
         {
             var tr = _player.transform;
-            var bounds = new Bounds(_mainCamera.transform.position,
-                new Vector3(_mainCamera.orthographicSize * _mainCamera.aspect * 2f, _mainCamera.orthographicSize * 2f,
-                    0f));
+            var bounds = new Bounds(_mainCamera.transform.position, new Vector3(_mainCamera.orthographicSize * _mainCamera.aspect * 2f, _mainCamera.orthographicSize * 2f, 0f));
 
-            var activeObjectBounds =
-                new Bounds(bounds.center, bounds.size * _gameSettingsData.EnemyExtraBoundsMultiplayer);
+            var activeObjectBounds = new Bounds(bounds.center, bounds.size * _gameSettingsData.EnemyExtraBoundsMultiplayer);
 
             ServiceLocator = new ServiceLocator();
             var inputSystem = new InputSystem();
@@ -41,23 +37,23 @@ namespace Game
             ServiceLocator.AddService(_gameUpdater);
             ServiceLocator.AddService(gameListener);
 
-            asteroidFactory.Init(activeObjectBounds, ServiceLocator);
-            smallAsteroidFactory.Init(activeObjectBounds, ServiceLocator);
-            bulletPoolFactory.Init(activeObjectBounds, ServiceLocator);
-            ufoFactory.Init(activeObjectBounds, _player.transform, ServiceLocator);
+            _asteroidFactory.Init(activeObjectBounds, ServiceLocator);
+            _smallAsteroidFactory.Init(activeObjectBounds, ServiceLocator);
+            _bulletPoolFactory.Init(activeObjectBounds, ServiceLocator);
+            _ufoFactory.Init(activeObjectBounds, _player.transform, ServiceLocator);
 
-            var asteroidSpawner = new AsteroidSpawner(ServiceLocator, asteroidFactory, bounds);
+            var asteroidSpawner = new AsteroidSpawner(ServiceLocator, _asteroidFactory, bounds);
             ServiceLocator.AddService(asteroidSpawner);
             _gameUpdater.AddListener(asteroidSpawner);
 
-            var smallAsteroidSpawner = new SmallAsteroidSpawner(ServiceLocator, smallAsteroidFactory);
+            var smallAsteroidSpawner = new SmallAsteroidSpawner(ServiceLocator, _smallAsteroidFactory);
             ServiceLocator.AddService(smallAsteroidSpawner);
 
-            var ufoSpawner = new UFOSpawner(ServiceLocator, ufoFactory, bounds);
+            var ufoSpawner = new UFOSpawner(ServiceLocator, _ufoFactory, bounds);
             ServiceLocator.AddService(ufoSpawner);
             _gameUpdater.AddListener(ufoSpawner);
 
-            var playerAttack = new PlayerAttack(ServiceLocator, bulletPoolFactory, _player.FirePositions, tr);
+            var playerAttack = new PlayerAttack(ServiceLocator, _bulletPoolFactory, _player.FirePositions, tr);
             var playerLaserAttack = new PlayerLaserAttack(ServiceLocator, bounds, _player.LaserPosition, tr);
             ServiceLocator.AddService(playerLaserAttack);
             _gameUpdater.AddListener(playerLaserAttack);
@@ -74,18 +70,15 @@ namespace Game
 
             gameListener.AddListener(_gameUpdater);
             gameListener.AddListener(inputSystem);
-            gameListener.AddListener(asteroidFactory);
-            gameListener.AddListener(smallAsteroidFactory);
-            gameListener.AddListener(bulletPoolFactory);
-            gameListener.AddListener(ufoFactory);
+            gameListener.AddListener(_asteroidFactory);
+            gameListener.AddListener(_smallAsteroidFactory);
+            gameListener.AddListener(_bulletPoolFactory);
+            gameListener.AddListener(_ufoFactory);
             gameListener.AddListener(playerMovement);
         }
 
         public void ClearBindings()
         {
-            if (ServiceLocator == null)
-                return;
-            
             ServiceLocator.GetService<GameListener>().RemoveAll();
             _gameUpdater.RemoveAll();
             ServiceLocator.RemoveAll();

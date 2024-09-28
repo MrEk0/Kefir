@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +9,7 @@ namespace Windows
         [SerializeField] private TMP_Text _scoreText;
         [SerializeField] private Button _replayButton;
 
-        [CanBeNull] private WindowSystem _windowSystem;
+        private WindowSystem _windowSystem;
 
         private void OnEnable()
         {
@@ -30,9 +29,6 @@ namespace Windows
 
         private void OnReplayClicked()
         {
-            if (_windowSystem == null)
-                return;
-            
             _windowSystem.Close<GameOverWindow>();
         }
     }

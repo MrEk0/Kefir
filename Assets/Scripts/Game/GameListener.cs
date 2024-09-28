@@ -3,7 +3,7 @@ using Interfaces;
 
 namespace Game
 {
-    public class GameListener : IServisable
+    public class GameListener
     {
         private readonly List<object> _listeners = new();
 

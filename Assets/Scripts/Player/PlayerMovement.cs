@@ -4,17 +4,16 @@ using Game;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Interfaces;
-using JetBrains.Annotations;
 using InputSystem = Game.InputSystem;
 
 namespace Player
 {
-    public class PlayerMovement : IGameUpdatable, IServisable, IDisposable, IGameStartListener
+    public class PlayerMovement : IGameUpdatable, IDisposable, IGameStartListener
     {
         public event Action<float, float, Vector2> PlayerMoveEvent = delegate { };
 
-        [CanBeNull] private readonly InputSystem _inputSystem;
-        [CanBeNull] private readonly Transform _transform;
+        private readonly InputSystem _inputSystem;
+        private readonly Transform _transform;
 
         private readonly float _screenHeight;
         private readonly float _boundaryOffset;
@@ -39,9 +38,6 @@ namespace Player
             _maxVelocity = data.PlayerMaxVelocity;
             _velocityTimeRate = data.PlayerVelocityTimeRate;
             _angleVelocity = data.PlayerAngleVelocity;
-        
-            if (_inputSystem == null)
-                return;
 
             _inputSystem.Player.Move.started += OnMoveStarted;
             _inputSystem.Player.Move.canceled += OnMoveCanceled;
@@ -49,18 +45,12 @@ namespace Player
 
         public void Dispose()
         {
-            if (_inputSystem == null)
-                return;
-
             _inputSystem.Player.Move.started -= OnMoveStarted;
             _inputSystem.Player.Move.canceled -= OnMoveCanceled;
         }
 
         public void OnUpdate(float deltaTime)
         {
-            if (_transform == null)
-                return;
-
             var tPos = _transform.position;
 
             _currentVelocity = _isMoving
@@ -102,9 +92,6 @@ namespace Player
 
         public void StartGame()
         {
-            if (_transform == null)
-                return;
-
             _transform.position = Vector3.zero;
             _transform.rotation = Quaternion.identity;
         }

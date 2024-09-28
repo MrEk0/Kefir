@@ -2,7 +2,6 @@ using System;
 using Configs;
 using Game;
 using Interfaces;
-using JetBrains.Annotations;
 using Player;
 using Pools;
 using UnityEngine;
@@ -10,21 +9,19 @@ using Random = UnityEngine.Random;
 
 namespace Spawners
 {
-    public class AsteroidSpawner : IGameUpdatable, IServisable
+    public class AsteroidSpawner : IGameUpdatable
     {
         public event Action<Vector3, Quaternion> AsteroidKilledEvent = delegate { };
 
-        [CanBeNull] private readonly DamageReceiverFactory _asteroidFactory;
-        [CanBeNull] private readonly PlayerVehicle _player;
-
+        private readonly DamageReceiverFactory _asteroidFactory;
+        private readonly PlayerVehicle _player;
         private readonly float _pause;
         private readonly Vector2 _angleRange;
 
         private float _timer;
         private Bounds _bounds;
 
-        public AsteroidSpawner(ServiceLocator serviceLocator, DamageReceiverFactory asteroidFactory,
-            Bounds bounds)
+        public AsteroidSpawner(ServiceLocator serviceLocator, DamageReceiverFactory asteroidFactory, Bounds bounds)
         {
             _asteroidFactory = asteroidFactory;
             _bounds = bounds;
@@ -49,9 +46,6 @@ namespace Spawners
 
         private void SpawnNewAsteroid()
         {
-            if (_player == null || _asteroidFactory == null)
-                return;
-
             var position = new Vector3(Random.Range(_bounds.min.x, _bounds.max.x), _bounds.max.y, 0f);
 
             var direction = (_player.transform.position - position).normalized;

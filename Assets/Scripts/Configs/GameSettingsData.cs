@@ -1,10 +1,9 @@
 using UnityEngine;
-using Interfaces;
 
 namespace Configs
 {
     [CreateAssetMenu(menuName = "Kefir/Configs/GameSettingsData")]
-    public class GameSettingsData : ScriptableObject, IServisable
+    public class GameSettingsData : ScriptableObject
     {
         [SerializeField] private int _playerMaxVelocity;
         [SerializeField] private float _playerVelocityTimeRate;

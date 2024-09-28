@@ -1,6 +1,6 @@
 using System;
+using Extensions;
 using Interfaces;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Common
@@ -9,13 +9,11 @@ namespace Common
     {
         private readonly float _velocity;
         private readonly Bounds _bounds;
+        private readonly Transform _target;
+        private readonly Transform _owner;
+        private readonly Action _outOfBoundariesAction;
 
-        [CanBeNull] private readonly Transform _target;
-        [CanBeNull] private readonly Transform _owner;
-        [CanBeNull] private readonly Action _outOfBoundariesAction;
-
-        public ObjectTargetFollowerMovement(Transform owner, Transform target, Bounds bounds, float velocity,
-            Action outOfBoundariesAction)
+        public ObjectTargetFollowerMovement(Transform owner, Transform target, Bounds bounds, float velocity, Action outOfBoundariesAction)
         {
             _owner = owner;
             _target = target;
@@ -26,12 +24,6 @@ namespace Common
 
         public void OnUpdate(float deltaTime)
         {
-            if (_target == null)
-                return;
-
-            if (_owner == null)
-                return;
-
             var tPos = _owner.position;
 
             var newPos = _owner.up * (_velocity * Time.deltaTime);

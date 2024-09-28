@@ -502,10 +502,10 @@ MonoBehaviour:
   _player: {fileID: 1047637693}
   _mainCamera: {fileID: 963194227}
   _gameSettingsData: {fileID: 11400000, guid: b594de69d401d5841b4dfcd6d247c6a5, type: 2}
-  bulletPoolFactory: {fileID: 238743507}
-  asteroidFactory: {fileID: 1470909373}
-  smallAsteroidFactory: {fileID: 1209148553}
-  ufoFactory: {fileID: 1069736827}
+  _bulletPoolFactory: {fileID: 238743507}
+  _asteroidFactory: {fileID: 1470909373}
+  _smallAsteroidFactory: {fileID: 1209148553}
+  _ufoFactory: {fileID: 1069736827}
 --- !u!4 &1050465128
 Transform:
   m_ObjectHideFlags: 0

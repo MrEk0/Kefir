@@ -3,7 +3,7 @@ using Interfaces;
 
 namespace Pools
 {
-    public abstract class ObjectPoolFactory : MonoBehaviour, IServisable
+    public abstract class ObjectPoolFactory : MonoBehaviour
     {
         public static bool CanRelease(ObjectPoolItem poolObject) => poolObject.gameObject.activeSelf;
 

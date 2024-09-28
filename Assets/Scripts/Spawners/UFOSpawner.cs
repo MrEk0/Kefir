@@ -9,19 +9,17 @@ using Random = UnityEngine.Random;
 
 namespace Spawners
 {
-    public class UFOSpawner : IGameUpdatable, IServisable
+    public class UFOSpawner : IGameUpdatable
     {
         public event Action UFOKilledEvent = delegate { };
 
-        [CanBeNull] private readonly TargetFollowerObjectFactory _objectFactory;
-
+        private readonly TargetFollowerObjectFactory _objectFactory;
         private readonly float _pause;
 
         private float _timer;
         private Bounds _bounds;
 
-        public UFOSpawner(ServiceLocator serviceLocator, TargetFollowerObjectFactory objectFactory,
-            Bounds bounds)
+        public UFOSpawner(ServiceLocator serviceLocator, TargetFollowerObjectFactory objectFactory, Bounds bounds)
         {
             _objectFactory = objectFactory;
             _bounds = bounds;
@@ -44,9 +42,6 @@ namespace Spawners
 
         private void SpawnNewUFO()
         {
-            if (_objectFactory == null)
-                return;
-
             var position = new Vector3(Random.Range(_bounds.min.x, _bounds.max.x), _bounds.max.y, 0f);
 
             var newPoolItem = _objectFactory.ObjectPool.Get();

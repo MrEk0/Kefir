@@ -4,20 +4,19 @@ using Game;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Interfaces;
-using JetBrains.Annotations;
 using InputSystem = Game.InputSystem;
 
 namespace Player
 {
-    public class PlayerLaserAttack : IDisposable, ILaserAttackable, IGameUpdatable, IServisable
+    public class PlayerLaserAttack : IDisposable, ILaserAttackable, IGameUpdatable
     {
         public event Action<Vector3, Vector3> LaserFireEvent = delegate { };
         public event Action<float> LaserTimerEvent = delegate { };
         public event Action<int> LaserShotEvent = delegate { };
 
-        [CanBeNull] private readonly InputSystem _inputSystem;
-        [CanBeNull] private readonly Transform _playerTransform;
-        [CanBeNull] private readonly Transform _laserPosition;
+        private readonly InputSystem _inputSystem;
+        private readonly Transform _playerTransform;
+        private readonly Transform _laserPosition;
 
         private readonly Bounds _screenBounds;
         private readonly int _layerMask;
@@ -27,8 +26,7 @@ namespace Player
         private int _laserShotsCount;
         private float _timer;
 
-        public PlayerLaserAttack(ServiceLocator serviceLocator, Bounds bounds, Transform laserPosition,
-            Transform transform)
+        public PlayerLaserAttack(ServiceLocator serviceLocator, Bounds bounds, Transform laserPosition, Transform transform)
         {
             _inputSystem = serviceLocator.GetService<InputSystem>();
 
@@ -42,9 +40,6 @@ namespace Player
             _laserShotRecoveryTime = data.LaserRecoveryTime;
             _laserShotsCount = _maxLaserShotCount;
             _timer = _laserShotRecoveryTime;
-            
-            if (_inputSystem == null)
-                return;
 
             _inputSystem.Player.LaserFire.performed += OnLaserAttack;
         }
@@ -68,17 +63,11 @@ namespace Player
 
         public void Dispose()
         {
-            if (_inputSystem == null)
-                return;
-
             _inputSystem.Player.LaserFire.performed -= OnLaserAttack;
         }
 
         private void OnLaserAttack(InputAction.CallbackContext value)
         {
-            if (_laserPosition == null || _playerTransform == null)
-                return;
-
             if (_laserShotsCount <= 0)
                 return;
 

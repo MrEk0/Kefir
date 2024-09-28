@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Interfaces;
 using UnityEngine;
 
 namespace Windows
 {
-    public class WindowSystem : MonoBehaviour, IServisable
+    public class WindowSystem : MonoBehaviour
     {
         [SerializeField] private Transform _windowsParent;
         [SerializeField] private ASimpleWindow[] _windowsPrefabs;

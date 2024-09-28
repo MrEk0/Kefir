@@ -1,19 +1,17 @@
 using System;
 using Configs;
-using Interfaces;
-using JetBrains.Annotations;
 using Spawners;
 using UnityEngine;
 
 namespace Game
 {
-    public class PointsController : IServisable, IDisposable
+    public class PointsController : IDisposable
     {
         public event Action<int> PointsUpdateEvent = delegate { };
 
-        [CanBeNull] private readonly AsteroidSpawner _asteroidSpawner;
-        [CanBeNull] private readonly SmallAsteroidSpawner _smallAsteroidSpawner;
-        [CanBeNull] private readonly UFOSpawner _ufoSpawner;
+        private readonly AsteroidSpawner _asteroidSpawner;
+        private readonly SmallAsteroidSpawner _smallAsteroidSpawner;
+        private readonly UFOSpawner _ufoSpawner;
 
         private readonly int _asteroidCoins;
         private readonly int _smallAsteroidCoins;
@@ -32,9 +30,6 @@ namespace Game
             _asteroidCoins = data.CoinsForAsteroid;
             _smallAsteroidCoins = data.CoinsForSmallAsteroid;
             _ufoCoins = data.CoinsForUFO;
-        
-            if (_asteroidSpawner == null || _smallAsteroidSpawner == null || _ufoSpawner == null)
-                return;
 
             _asteroidSpawner.AsteroidKilledEvent += OnAsteroidKilled;
             _smallAsteroidSpawner.SmallAsteroidKilledEvent += OnSmallAsteroidKilled;
@@ -43,9 +38,6 @@ namespace Game
 
         public void Dispose()
         {
-            if (_asteroidSpawner == null || _smallAsteroidSpawner == null || _ufoSpawner == null)
-                return;
-
             _asteroidSpawner.AsteroidKilledEvent -= OnAsteroidKilled;
             _smallAsteroidSpawner.SmallAsteroidKilledEvent -= OnSmallAsteroidKilled;
             _ufoSpawner.UFOKilledEvent -= OnUFOKilled;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Player
 {
-    public class PlayerVehicle : MonoBehaviour, IDamagable, IServisable
+    public class PlayerVehicle : MonoBehaviour, IDamagable
     {
         public event Action DeadEvent = delegate { };
 

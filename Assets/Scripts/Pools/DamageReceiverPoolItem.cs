@@ -1,13 +1,12 @@
 using System;
 using Interfaces;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Pools
 {
     public class DamageReceiverPoolItem : AttackerPoolItem, IDamagable
     {
-        [CanBeNull] private Action<DamageReceiverPoolItem> _takeDamageAction;
+        private Action<DamageReceiverPoolItem> _takeDamageAction;
         
         public new event Action<Collider2D, DamageReceiverPoolItem> CollisionEvent = delegate { };
 

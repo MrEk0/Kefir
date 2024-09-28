@@ -1,19 +1,18 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using Interfaces;
 
 namespace Game
 {
     public class ServiceLocator
     {
-        private readonly List<IServisable> _services = new();
+        private readonly List<object> _services = new();
 
-        public void AddService(IServisable service)
+        public void AddService(object service)
         {
             _services.Add(service);
         }
 
-        public void RemoveService(IServisable service)
+        public void RemoveService(object service)
         {
             _services.Remove(service);
         }
@@ -33,8 +32,7 @@ namespace Game
                 }
             }
 
-            Debug.LogError($"Service of type {typeof(T)} is not found!");
-            return default;
+            throw new Exception($"Service of type {typeof(T)} is not found!");
         }
     }
 }

@@ -3,9 +3,9 @@ using Interfaces;
 
 namespace Game
 {
-    public class InputSystem : IServisable, IGameStartListener, IGameFinishListener
+    public class InputSystem : IGameStartListener, IGameFinishListener
     {
-        [CanBeNull] private InputSystemActions _inputSystemActions { get; }
+        private InputSystemActions _inputSystemActions { get; }
 
         public InputSystemActions.PlayerActions Player => _inputSystemActions?.Player ?? new InputSystemActions.PlayerActions();
 

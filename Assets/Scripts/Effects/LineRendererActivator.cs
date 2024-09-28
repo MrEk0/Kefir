@@ -3,15 +3,13 @@ using Configs;
 using Game;
 using UnityEngine;
 using Interfaces;
-using JetBrains.Annotations;
 
 namespace Effects
 {
     public class LineRendererActivator : IDisposable, IGameUpdatable
     {
-        [CanBeNull] private readonly LineRenderer _lineRenderer;
-        [CanBeNull] private readonly ILaserAttackable _attacker;
-        
+        private readonly LineRenderer _lineRenderer;
+        private readonly ILaserAttackable _attacker;
         private readonly float _duration;
 
         private float _timer;
@@ -24,29 +22,19 @@ namespace Effects
 
             _isActive = false;
             _duration = serviceLocator.GetService<GameSettingsData>().LaserDuration;
-
-            if (_lineRenderer != null)
-                _lineRenderer.enabled = _isActive;
-        
-            if (_attacker == null)
-                return;
-
+            
+            _lineRenderer.enabled = _isActive;
+            
             _attacker.LaserFireEvent += OnLaserAttack;
         }
 
         public void Dispose()
         {
-            if (_attacker == null)
-                return;
-
             _attacker.LaserFireEvent -= OnLaserAttack;
         }
 
         public void OnUpdate(float deltaTime)
         {
-            if (_lineRenderer == null)
-                return;
-
             if (!_isActive)
                 return;
 
@@ -63,9 +51,6 @@ namespace Effects
 
         private void OnLaserAttack(Vector3 initPosition, Vector3 finishPosition)
         {
-            if (_lineRenderer == null)
-                return;
-
             _isActive = true;
 
             _lineRenderer.enabled = _isActive;

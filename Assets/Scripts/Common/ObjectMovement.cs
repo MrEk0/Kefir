@@ -1,6 +1,6 @@
 using System;
+using Extensions;
 using Interfaces;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Common
@@ -9,9 +9,8 @@ namespace Common
     {
         private readonly float _velocity;
         private readonly Bounds _bounds;
-
-        [CanBeNull] private readonly Transform _owner;
-        [CanBeNull] private readonly Action _outOfBoundariesAction;
+        private readonly Transform _owner;
+        private readonly Action _outOfBoundariesAction;
 
         public ObjectMovement(Transform owner, Bounds bounds, float velocity, Action outOfBoundariesAction)
         {
